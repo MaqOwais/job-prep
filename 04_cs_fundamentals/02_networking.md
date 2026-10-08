@@ -50,7 +50,7 @@ Record types: A, AAAA, CNAME, MX, NS, TXT. Resolution is recursive (the resolver
 - **mTLS:** both sides present certificates (service-to-service).
 
 ## Load balancing and proxies
-See [system design: load balancing](../02_system_design/03_load_balancing_reverse_proxy/).
+See [system design: load balancing](../02_high_level_design/03_load_balancing_reverse_proxy/).
 
 ## Interview questions
 1. What happens when you type a URL? (Above. Practice saying it in 2 minutes.)

@@ -9,7 +9,7 @@ Design:
   - doubly linked list: most recent at the head, least recent at the tail (O(1) move/remove)
   - sentinel head/tail nodes remove the edge cases
 Follow-ups: thread safety (add a lock), TTL per entry, LFU variant, distributed version
-(see 02_system_design/12_problems/easy/03_key_value_cache.md).
+(see 02_high_level_design/12_problems/easy/03_key_value_cache.md).
 """
 
 

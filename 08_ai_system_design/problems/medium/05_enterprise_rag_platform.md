@@ -1,5 +1,6 @@
-# 🔴 20. LLM-Powered Assistant / RAG Platform (ChatGPT-style app over company docs)
+# 🟡 05. Enterprise RAG Platform (ChatGPT-style assistant over company docs)
 
+📖 Concepts: [RAG & retrieval](../../concepts/02_rag_retrieval.md) · [Safety](../../concepts/06_safety_security.md) · [Evaluation](../../concepts/05_evaluation_observability.md) · [AWS GenAI stack](../../concepts/08_aws_genai_stack.md)
 📖 Related: [AWS: What is RAG](https://aws.amazon.com/what-is/retrieval-augmented-generation/) · [Amazon Bedrock Knowledge Bases](https://aws.amazon.com/bedrock/knowledge-bases/) · [Anthropic: Contextual retrieval](https://www.anthropic.com/news/contextual-retrieval)
 ⏱️ Try it yourself first: 45 minutes. **This plays directly to your agentic AI research. Expect it at AI-focused companies and AWS.**
 

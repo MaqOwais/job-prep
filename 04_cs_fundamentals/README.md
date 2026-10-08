@@ -10,7 +10,7 @@ Many SWE loops include rapid-fire questions on OS, networking, databases, concur
 | 4 | [Concurrency](04_concurrency.md) | Race conditions, locks, semaphores, producer-consumer, Python GIL, async |
 | 5 | [OOP](05_oop.md) | 4 pillars, composition vs inheritance, interfaces, SOLID |
 
-Also see: [System design concepts](../02_system_design/) · [LLD](../03_low_level_design/)
+Also see: [System design concepts](../02_high_level_design/) · [LLD](../03_low_level_design/)
 
 ---
 

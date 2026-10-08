@@ -3,7 +3,7 @@
 **Signals:** "prefix", "starts with", autocomplete, a dictionary of words + searching a grid, wildcard search.
 
 ## Core idea
-A tree where each edge is a character. Insert and search take O(L) for a word of length L, **no matter how many words are stored**. It's also used in the [typeahead system design](../../02_system_design/12_problems/medium/10_typeahead_autocomplete.md).
+A tree where each edge is a character. Insert and search take O(L) for a word of length L, **no matter how many words are stored**. It's also used in the [typeahead system design](../../02_high_level_design/12_problems/medium/10_typeahead_autocomplete.md).
 
 ## Template
 ```python

@@ -86,4 +86,4 @@ SELECT m, rev, rev - LAG(rev) OVER (ORDER BY m) AS growth FROM monthly;
 3. Composite index leftmost-prefix rule.
 4. INNER vs LEFT vs FULL OUTER JOIN.
 5. How would you find and fix a slow query?
-6. SQL vs NoSQL ([system design module](../02_system_design/05_databases/)).
+6. SQL vs NoSQL ([system design module](../02_high_level_design/05_databases/)).

@@ -2,7 +2,7 @@
 🔴 Online Chat — users, friend requests, private & group chats, Observer for delivery.
 
 Primer: https://github.com/donnemartin/system-design-primer/blob/master/solutions/object_oriented_design/online_chat/online_chat.ipynb
-System-design version: 02_system_design/12_problems/medium/08_chat_system.md
+System-design version: 02_high_level_design/12_problems/medium/08_chat_system.md
 
 Requirements:
   - Users send/accept/reject friend requests

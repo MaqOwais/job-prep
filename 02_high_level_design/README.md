@@ -1,8 +1,13 @@
-# 🏗️ System Design
+# 🏗️ High-Level System Design (HLD)
+
+**HLD** = services, databases, caches, queues, and how they connect, scale, and fail. (Class-level design lives in [03_low_level_design](../03_low_level_design/). AI-specific design lives in [08_ai_system_design](../08_ai_system_design/).)
+
+⭐ **Start with the [HLD cheat sheet](00_hld_cheatsheet.md)**: skeleton diagram, component catalog, scaling and reliability playbooks, tradeoff phrases, and the most-asked questions by company.
 
 This section follows the structure of the [System Design Primer](https://github.com/donnemartin/system-design-primer) (CC BY 4.0). Each module has my **condensed notes + interview phrasing + links to the exact primer sections** for more depth.
 
 ## How to study (easy → hard)
+0. **🧱 Start here: [Step-by-step fundamentals](00_step_by_step_fundamentals/README.md).** Grow one app from a single server to millions of users. Each step shows what breaks and which component fixes it (load balancer, replication, cache, CDN, stateless tier, multiple data centers, queue, observability, sharding).
 1. **Concepts (Weeks 1–2):** read modules 1–10 in order. After each one, explain it out loud in 2 minutes without notes.
 2. **Framework:** learn [11_interview_framework](11_interview_framework/) by heart. Every design answer follows it.
 3. **Problems (Weeks 3–6):** 🟢 easy → 🟡 medium → 🔴 hard. For each one: try it yourself for 35 minutes on paper or [Excalidraw](https://excalidraw.com) **first**, then compare against the notes and the primer solution.
@@ -33,10 +38,15 @@ See [12_problems/README.md](12_problems/README.md) for the full list, ordered by
 | [Key-value cache](12_problems/easy/03_key_value_cache.md) | [Chat system](12_problems/medium/08_chat_system.md) | [Distributed KV store](12_problems/hard/17_distributed_kv_store.md) |
 | [Scale to millions on AWS](12_problems/easy/04_scale_to_millions_aws.md) | [Notification system](12_problems/medium/09_notification_system.md) | [Google Docs](12_problems/hard/18_google_docs.md) |
 | [Unique ID generator](12_problems/easy/05_unique_id_generator.md) | [Typeahead](12_problems/medium/10_typeahead_autocomplete.md) | [Payment system](12_problems/hard/19_payment_system.md) |
-| | [Social graph](12_problems/medium/11_social_graph.md) | [LLM / RAG platform](12_problems/hard/20_llm_rag_platform.md) |
-| | [Sales rank](12_problems/medium/12_sales_rank.md) | |
-| | [Mint](12_problems/medium/13_mint_personal_finance.md) | |
-| | [Search engine](12_problems/medium/14_search_engine.md) | |
+| [Leaderboard](12_problems/easy/20_leaderboard.md) | [Social graph](12_problems/medium/11_social_graph.md) | [Job scheduler](12_problems/hard/26_distributed_job_scheduler.md) |
+| | [Sales rank](12_problems/medium/12_sales_rank.md) | [Metrics & monitoring](12_problems/hard/27_metrics_monitoring.md) |
+| | [Mint](12_problems/medium/13_mint_personal_finance.md) | [Message queue (Kafka)](12_problems/hard/28_distributed_message_queue.md) |
+| | [Search engine](12_problems/medium/14_search_engine.md) | [Stock exchange](12_problems/hard/29_stock_exchange.md) |
+| | [Instagram](12_problems/medium/21_instagram.md) | 🤖 AI problems → [08_ai_system_design](../08_ai_system_design/) |
+| | [Dropbox / Drive](12_problems/medium/22_dropbox_file_sync.md) | |
+| | [Ticketmaster](12_problems/medium/23_ticketmaster.md) | |
+| | [E-commerce checkout](12_problems/medium/24_ecommerce_checkout.md) | |
+| | [Proximity (Yelp)](12_problems/medium/25_proximity_service_yelp.md) | |
 
 ## 🧩 The building blocks (one-line reminders)
 | Problem | Building block |

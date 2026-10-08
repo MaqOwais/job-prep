@@ -41,6 +41,14 @@ Main repo: [donnemartin/system-design-primer](https://github.com/donnemartin/sys
 - [AWS Architecture Center](https://aws.amazon.com/architecture/) · [AWS Well-Architected](https://aws.amazon.com/architecture/well-architected/)
 - Papers: [Dynamo](https://www.allthingsdistributed.com/files/amazon-dynamo-sosp2007.pdf) · [Google File System](https://research.google/pubs/the-google-file-system/) · [MapReduce](https://research.google/pubs/mapreduce-simplified-data-processing-on-large-clusters/) · [Bigtable](https://research.google/pubs/bigtable-a-distributed-storage-system-for-structured-data/)
 
+## 🤖 AI / LLM system design (see [08_ai_system_design](../08_ai_system_design/))
+- Chip Huyen, [*AI Engineering*](https://www.oreilly.com/library/view/ai-engineering/9781098166298/) and *Designing Machine Learning Systems*
+- [Anthropic: Building effective agents](https://www.anthropic.com/research/building-effective-agents) · [Contextual retrieval](https://www.anthropic.com/news/contextual-retrieval)
+- [Model Context Protocol](https://modelcontextprotocol.io/) · [OWASP Top 10 for LLM apps](https://genai.owasp.org/llm-top-10/)
+- [vLLM docs](https://docs.vllm.ai/) · [PagedAttention paper](https://arxiv.org/abs/2309.06180)
+- [Eugene Yan: patterns for LLM systems](https://eugeneyan.com/writing/llm-patterns/)
+- [Amazon Bedrock docs](https://docs.aws.amazon.com/bedrock/)
+
 ## 🧱 Low-level design
 - [awesome-low-level-design](https://github.com/ashishps1/awesome-low-level-design)
 - [Refactoring.Guru: design patterns](https://refactoring.guru/design-patterns)

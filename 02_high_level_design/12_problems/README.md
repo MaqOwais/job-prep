@@ -1,4 +1,6 @@
-# 🧪 System Design Problems: Easy → Medium → Hard
+# 🧪 High-Level Design Problems: Easy → Medium → Hard
+
+> Not sure which to do first? The [HLD cheat sheet](../00_hld_cheatsheet.md#8-most-asked-hld-questions-by-company-as-commonly-reported-use-these-to-prioritize) lists the most-asked questions by company.
 
 **How to use each problem:**
 1. Read only the title + requirements. Close the file.
@@ -16,6 +18,7 @@ Every problem file follows the same structure: Requirements → Estimates → AP
 | 03 | [Key-value cache (search query cache)](easy/03_key_value_cache.md) | LRU, sharding the cache, consistent hashing | [📖 Query cache](https://github.com/donnemartin/system-design-primer/blob/master/solutions/system_design/query_cache/README.md) |
 | 04 | [Scale to millions of users on AWS](easy/04_scale_to_millions_aws.md) | Iterative scaling: 1 box → multi-AZ → caches → autoscaling | [📖 Scaling AWS](https://github.com/donnemartin/system-design-primer/blob/master/solutions/system_design/scaling_aws/README.md) |
 | 05 | [Unique ID generator](easy/05_unique_id_generator.md) | Snowflake IDs, clock skew | — |
+| 20 | [Leaderboard](easy/20_leaderboard.md) | Redis sorted sets, rank queries, sharding by score | — |
 
 ## 🟡 Medium: several components + one hard tradeoff
 | # | Problem | Core concepts | Primer solution |
@@ -29,6 +32,11 @@ Every problem file follows the same structure: Requirements → Estimates → AP
 | 12 | [Sales rank by category (Amazon)](medium/12_sales_rank.md) | Batch MapReduce, top-k | [📖 Sales rank](https://github.com/donnemartin/system-design-primer/blob/master/solutions/system_design/sales_rank/README.md) |
 | 13 | [Personal finance (Mint)](medium/13_mint_personal_finance.md) | Async ingestion, categorization, budgets | [📖 Mint](https://github.com/donnemartin/system-design-primer/blob/master/solutions/system_design/mint/README.md) |
 | 14 | [Search engine](medium/14_search_engine.md) | Inverted index, ranking, sharding the index | — |
+| 21 | [Instagram](medium/21_instagram.md) | Media pipeline, CDN, hybrid feed, like counters | — |
+| 22 | [Dropbox / Google Drive](medium/22_dropbox_file_sync.md) | Chunking, content-hash dedup, sync journal, conflicts | — |
+| 23 | [Ticketmaster](medium/23_ticketmaster.md) | Seat holds with TTL, conditional updates, virtual waiting room | — |
+| 24 | [E-commerce checkout (Amazon)](medium/24_ecommerce_checkout.md) | AP cart vs CP inventory, checkout saga, outbox | — |
+| 25 | [Proximity service (Yelp)](medium/25_proximity_service_yelp.md) | Geohash/quadtree, neighbor cells, read-only index | — |
 
 ## 🔴 Hard: distributed systems depth
 | # | Problem | Core concepts |
@@ -38,7 +46,13 @@ Every problem file follows the same structure: Requirements → Estimates → AP
 | 17 | [Distributed key-value store (Dynamo)](hard/17_distributed_kv_store.md) | Consistent hashing, quorum, vector clocks, gossip |
 | 18 | [Google Docs](hard/18_google_docs.md) | OT/CRDT, real-time sync, versioning |
 | 19 | [Payment system](hard/19_payment_system.md) | Idempotency, ledgers, exactly-once, reconciliation |
-| 20 | [LLM / RAG platform](hard/20_llm_rag_platform.md) | Embeddings, vector search, GPU serving, streaming, guardrails |
+| 26 | [Distributed job scheduler](hard/26_distributed_job_scheduler.md) | Leases, dedup on (job, time), heartbeats, DAGs |
+| 27 | [Metrics & monitoring](hard/27_metrics_monitoring.md) | TSDB, compression, downsampling, alert state machine |
+| 28 | [Distributed message queue (Kafka)](hard/28_distributed_message_queue.md) | Partitioned replicated log, ISR, offsets, delivery semantics |
+| 29 | [Stock exchange](hard/29_stock_exchange.md) | Order book, sequencer, event sourcing, single-threaded engine |
+
+## 🤖 AI / LLM design problems
+RAG, LLM gateway, agents, inference platforms and more are in their own folder: [08_ai_system_design](../../08_ai_system_design/).
 
 ## More practice questions
 The primer's [additional system design interview questions](https://github.com/donnemartin/system-design-primer#additional-system-design-interview-questions) list includes Dropbox, Google search, a distributed lock, an API rate limiter, a stock exchange, and more, each linked to real articles.

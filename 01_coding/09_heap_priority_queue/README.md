@@ -60,7 +60,7 @@ class MedianFinder:
 | [ ] | [K Closest Points to Origin](https://leetcode.com/problems/k-closest-points-to-origin/) | Max-heap of size k on −dist |
 | [ ] | [Kth Largest Element in an Array](https://leetcode.com/problems/kth-largest-element-in-an-array/) | Heap, or quickselect |
 | [ ] | [Task Scheduler](https://leetcode.com/problems/task-scheduler/) | Formula `(maxf−1)(n+1)+countMax`, or heap + cooldown queue |
-| [ ] | [Design Twitter](https://leetcode.com/problems/design-twitter/) | Merge the followees' tweet lists with a heap (see [news feed SD](../../02_system_design/12_problems/medium/06_twitter_news_feed.md)) |
+| [ ] | [Design Twitter](https://leetcode.com/problems/design-twitter/) | Merge the followees' tweet lists with a heap (see [news feed SD](../../02_high_level_design/12_problems/medium/06_twitter_news_feed.md)) |
 | [ ] | [Top K Frequent Words](https://leetcode.com/problems/top-k-frequent-words/) | Heap with key (−count, word) |
 | [ ] | [Reorganize String](https://leetcode.com/problems/reorganize-string/) | Greedy: most frequent first, hold back the previous character |
 

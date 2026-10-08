@@ -19,12 +19,13 @@ System design content follows the structure of Donne Martin's [System Design Pri
 |---|---|---|
 | [00_start_here](00_start_here/) | Study plan, progress tracker, interview-day checklist | [study_plan.md](00_start_here/study_plan.md) |
 | [01_coding](01_coding/) | 17 DSA patterns, each with a template, signals, and Easy/Medium/Hard problems with hints | [01_coding/README.md](01_coding/README.md) |
-| [02_system_design](02_system_design/) | 11 concept modules + 20 design problems (easy/medium/hard) | [02_system_design/README.md](02_system_design/README.md) |
+| [02_high_level_design](02_high_level_design/) | High-level system design: **step-by-step fundamentals (1 server → millions)** + HLD cheat sheet + 11 concept modules + 29 design problems | [Step-by-step fundamentals](02_high_level_design/00_step_by_step_fundamentals/README.md) |
 | [03_low_level_design](03_low_level_design/) | OOD / LLD approach, SOLID, design patterns, runnable Python designs | [03_low_level_design/README.md](03_low_level_design/README.md) |
 | [04_cs_fundamentals](04_cs_fundamentals/) | OS, networking, databases/SQL, concurrency, OOP: the "SWE fundamentals" round | [04_cs_fundamentals/README.md](04_cs_fundamentals/README.md) |
 | [05_behavioral](05_behavioral/) | STAR method, story bank, common questions | [05_behavioral/README.md](05_behavioral/README.md) |
 | [06_company_specific](06_company_specific/) | Role-specific plans (AWS Associate Startup SA) | [aws_startup_sa](06_company_specific/aws_startup_sa/AWS_Associate_Startup_SA_Prep_Plan.md) |
 | [07_resources](07_resources/) | Every external link in one place | [07_resources/README.md](07_resources/README.md) |
+| [08_ai_system_design](08_ai_system_design/) | 🤖 AI/LLM system design: 8 concept modules (LLMs, RAG, agents, serving, evals, safety, ML, AWS GenAI) + 12 problems (easy/medium/hard) | [08_ai_system_design/README.md](08_ai_system_design/README.md) |
 
 ---
 
@@ -33,7 +34,8 @@ System design content follows the structure of Donne Martin's [System Design Pri
 | Round | What they score | Prepare with |
 |---|---|---|
 | **Coding** | Problem solving, clean code, complexity analysis, testing, communication | [01_coding](01_coding/) |
-| **System design** | Requirements gathering, high-level design, deep dives, tradeoffs, scaling | [02_system_design](02_system_design/) |
+| **High-level system design** | Requirements gathering, high-level design, deep dives, tradeoffs, scaling | [02_high_level_design](02_high_level_design/) |
+| **AI / ML system design** | Model strategy, retrieval, GPU cost and latency, evaluation, safety | [08_ai_system_design](08_ai_system_design/) |
 | **Low-level / OOD** | Class design, abstractions, extensibility, clean APIs | [03_low_level_design](03_low_level_design/) |
 | **SWE fundamentals** | OS, networking, DB, concurrency knowledge | [04_cs_fundamentals](04_cs_fundamentals/) |
 | **Behavioral** | Ownership, impact, conflict, failure, learning | [05_behavioral](05_behavioral/) |
