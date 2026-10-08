@@ -1,0 +1,60 @@
+# 6. Caching
+
+📖 Primer: [Cache](https://github.com/donnemartin/system-design-primer#cache) · [Client caching](https://github.com/donnemartin/system-design-primer#client-caching) · [CDN caching](https://github.com/donnemartin/system-design-primer#cdn-caching) · [Web server caching](https://github.com/donnemartin/system-design-primer#web-server-caching) · [Database caching](https://github.com/donnemartin/system-design-primer#database-caching) · [Application caching](https://github.com/donnemartin/system-design-primer#application-caching) · [When to update the cache](https://github.com/donnemartin/system-design-primer#when-to-update-the-cache)
+
+---
+
+## 6.1 Where to cache (from the client to the DB)
+Client/browser → **CDN** → web server / reverse proxy (Varnish, NGINX) → **application cache (Redis/Memcached)** → database buffer cache.
+
+## 6.2 What to cache
+- **Query-level:** hash the query → cache the result. Hard to invalidate when data changes.
+- **Object-level (preferred):** cache assembled objects (a user profile, a rendered page fragment, an activity stream). Easy to invalidate when the object changes, and works with async workers.
+
+Good candidates: user sessions, fully rendered pages, activity streams, user graph data, hot items.
+
+## 6.3 Cache update strategies (frequently asked)
+| Strategy | How | Pros | Cons |
+|---|---|---|---|
+| **Cache-aside (lazy loading)** | App reads the cache → on a miss, reads the DB → writes the cache | Only caches what's requested; cache failure isn't fatal | Miss = 3 round trips; stale data until TTL |
+| **Write-through** | App writes to the cache → cache writes to the DB synchronously | Cache is always fresh | Slower writes; caches data that may never be read |
+| **Write-behind (write-back)** | Write to the cache → asynchronously flush to the DB | Very fast writes | **Data loss** if the cache dies before flushing |
+| **Refresh-ahead** | Refresh popular items before they expire | Lower latency | Wasted work if the prediction is wrong |
+
+```python
+# Cache-aside
+def get_user(uid):
+    user = cache.get(f"user:{uid}")
+    if user is None:
+        user = db.query("SELECT * FROM users WHERE id = %s", uid)
+        cache.set(f"user:{uid}", user, ttl=3600)
+    return user
+# On update: write the DB, then DELETE the cache key (don't update it, to avoid races)
+```
+
+## 6.4 Eviction policies
+**LRU** (most common; see [LRU cache LLD](../../03_low_level_design/problems/lru_cache.py)), LFU, FIFO, TTL-based, random.
+
+## 6.5 Cache problems and fixes
+| Problem | What happens | Fix |
+|---|---|---|
+| **Cache stampede / thundering herd** | A hot key expires → thousands of requests hit the DB | Mutex/lock on rebuild, request coalescing, staggered/jittered TTLs, refresh-ahead |
+| **Cache penetration** | Requests for keys that don't exist always miss | Cache nulls briefly, Bloom filter |
+| **Hot key** | One key gets huge traffic → one cache node overloads | Replicate the key (`key#1..N`), local in-process cache |
+| **Stale data** | Cache and DB disagree | TTL, delete the key on write, CDC-based invalidation |
+| **Cold start** | Empty cache after a deploy or restart | Warm-up scripts |
+
+## 6.6 Redis vs Memcached
+| Redis | Memcached |
+|---|---|
+| Rich data structures (lists, sets, sorted sets, streams, hashes) | Simple strings |
+| Persistence, replication, pub/sub, Lua scripts | Pure in-memory, multithreaded |
+| Use for leaderboards (sorted sets), rate limiting, queues | Simple large-scale object caching |
+
+## 🗣️ Say it in an interview
+> "Cache-aside with Redis, a 1-hour TTL with jitter, and delete-on-write. For hot celebrity profiles I'd add an in-process cache with a 5-second TTL to protect the Redis node."
+
+## ✅ Self-check
+- [ ] Compare the 4 update strategies; which loses data?
+- [ ] How do you prevent a cache stampede?
+- [ ] Why delete the cache key on write instead of updating it?
