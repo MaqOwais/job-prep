@@ -60,3 +60,42 @@ def base62(n):
 
 ## ✅ Takeaways
 Read-heavy → **cache aggressively**. Choosing how to generate IDs is the core decision. Keep analytics async.
+
+## 🧠 Test yourself: 5 interview questions
+
+Answer each one out loud first, then click it to check.
+
+<details>
+<summary><b>Q1. How do you generate short codes without collisions?</b></summary>
+
+Options: (1) a **unique counter/ID → base62** (no collisions; use Snowflake IDs or per-server ID ranges so there's no central bottleneck), (2) **hash the URL** and take 7 characters, then check for a collision and retry with a salt, (3) a **pre-generated key service**. Counter + base62 is simplest; add randomization if codes must not be guessable.
+
+</details>
+
+<details>
+<summary><b>Q2. 301 or 302 redirect?</b></summary>
+
+**301 (permanent)** is cached by browsers, which means less server load but you **lose click analytics** and can't change the target. **302 (temporary)** sends every click through your servers, so you keep analytics and control. Most shorteners use 302 (or 307).
+
+</details>
+
+<details>
+<summary><b>Q3. How many characters do you need for the short code?</b></summary>
+
+With base62, 62^6 ≈ 57B and 62^7 ≈ 3.5T combinations. For ~12B URLs over 10 years, **7 characters** gives plenty of headroom.
+
+</details>
+
+<details>
+<summary><b>Q4. How do you scale the redirect path to 100K requests per second?</b></summary>
+
+It's read-heavy and the data is immutable: a **Redis cache** (hot 20% of codes), **CDN/edge** caching of redirects, read replicas or a KV store (DynamoDB) partitioned by code, stateless redirect servers behind a load balancer. Analytics go asynchronously to a queue.
+
+</details>
+
+<details>
+<summary><b>Q5. How would you implement link expiration and custom aliases?</b></summary>
+
+Store expire_at. Check it on read (**lazy expiry**) and run a periodic cleanup job; optionally use a DB TTL feature. Custom alias: a **conditional insert** (insert only if the key doesn't exist) so two users can't claim the same alias; reserve offensive or system words.
+
+</details>

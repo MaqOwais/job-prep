@@ -56,3 +56,42 @@ Retrieved the wrong chunk (retrieval failure) vs had the right chunk but answere
 - [ ] HNSW vs IVF in 2 sentences
 - [ ] Why hybrid search + re-ranking?
 - [ ] Where do you enforce document permissions, and why there?
+
+## 🧠 Test yourself: 5 interview questions
+
+Answer each one out loud first, then click it to check.
+
+<details>
+<summary><b>Q1. Why combine BM25 keyword search with vector search?</b></summary>
+
+Embeddings capture **meaning** but miss **exact tokens** (error codes, SKUs, names, rare terms). BM25 catches exact matches but misses synonyms and paraphrases. **Hybrid search**, merged with Reciprocal Rank Fusion, consistently beats either alone.
+
+</details>
+
+<details>
+<summary><b>Q2. What does a re-ranker add, and what does it cost?</b></summary>
+
+A **cross-encoder** scores (query, chunk) pairs jointly, which is much more accurate than embedding similarity. Use it on the top 50–100 candidates to pick the best 5–10. Cost: extra latency (tens to hundreds of ms) and compute, so run it only on a small candidate set.
+
+</details>
+
+<details>
+<summary><b>Q3. How do you choose a chunk size?</b></summary>
+
+Balance **context vs precision**: too small loses surrounding meaning, too large dilutes the embedding and wastes tokens. Start with ~300–800 tokens with 10–20% overlap, split on **document structure** (headings, paragraphs), then **tune with retrieval evals** (recall@k).
+
+</details>
+
+<details>
+<summary><b>Q4. HNSW vs IVF indexes?</b></summary>
+
+**HNSW:** a multi-layer graph; very fast, high recall, incremental inserts, but memory-heavy. **IVF:** clusters vectors and searches only the nearest clusters (nprobe); less memory, good with compression (PQ) at very large scale, but needs training and is less precise. HNSW is the default.
+
+</details>
+
+<details>
+<summary><b>Q5. Users complain the RAG bot gives wrong answers. How do you debug it?</b></summary>
+
+Separate **retrieval** from **generation** failures. Check whether the right chunk was in the top-k (recall@k on a labeled set). If not, fix chunking, embeddings, hybrid search, filters, or query rewriting. If yes but the answer is still wrong, fix the prompt, add a re-ranker, reduce noisy context, or use a stronger model, and measure faithfulness.
+
+</details>

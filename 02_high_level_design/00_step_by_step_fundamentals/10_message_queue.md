@@ -59,4 +59,43 @@ User ──upload──▶ [web server] ──1. save original to S3
 - [ ] Why must consumers be idempotent?
 - [ ] Queue vs pub/sub vs Kafka log
 
+## 🧠 Test yourself: 5 interview questions
+
+Answer each one out loud first, then click it to check.
+
+<details>
+<summary><b>Q1. Why would you introduce a message queue between the API and the workers?</b></summary>
+
+To make slow work **asynchronous** (fast responses), **decouple** producers from consumers (they scale and fail independently), **buffer spikes**, and get **retries** for free. Example: the upload API returns 202 while thumbnail workers process the images from the queue.
+
+</details>
+
+<details>
+<summary><b>Q2. What happens if a worker crashes halfway through processing a message?</b></summary>
+
+It never acknowledges the message. After the **visibility timeout** (SQS) or session timeout (Kafka consumer group), the message becomes available again and another worker retries it. After N failures it goes to a **dead-letter queue** for investigation.
+
+</details>
+
+<details>
+<summary><b>Q3. Why must queue consumers be idempotent?</b></summary>
+
+Most queues guarantee **at-least-once** delivery: retries, timeouts, and rebalances can deliver a message more than once. An idempotent consumer (dedupe by message or business ID, upserts, "already done → skip") makes duplicates harmless.
+
+</details>
+
+<details>
+<summary><b>Q4. Queue vs pub/sub vs log (Kafka): what's the difference?</b></summary>
+
+**Queue** (SQS, RabbitMQ): each message is processed by one consumer, then deleted. **Pub/sub** (SNS): each message is copied to all subscribers. **Log** (Kafka, Kinesis): an ordered, retained, **replayable** stream. Multiple consumer groups each read everything at their own offset, with ordering per partition.
+
+</details>
+
+<details>
+<summary><b>Q5. How do you know when to scale the workers?</b></summary>
+
+Watch **queue depth / consumer lag** and the age of the oldest message. Autoscale workers on backlog per worker. Also watch the processing error rate and DLQ size. If the queue keeps growing, consumers can't keep up: scale them out, optimize them, or apply back pressure upstream.
+
+</details>
+
 **Next →** [Step 11: Logging, metrics, automation](11_logging_metrics_automation.md)

@@ -68,4 +68,46 @@ Put **everything on one machine**: the web server, the application code, the dat
 - [ ] What does DNS do, and why isn't it on our server?
 - [ ] Name 3 problems with the single-server setup
 
+## 🧠 Test yourself: 5 interview questions
+
+Answer each one out loud first, then click it to check.
+
+<details>
+<summary><b>Q1. Walk through what happens when a user opens your app for the first time on a single-server setup.</b></summary>
+
+1. The client asks **DNS** to resolve the domain name to an IP address (the answer is cached by TTL).
+2. The client opens a TCP connection (plus a TLS handshake for HTTPS) to that IP.
+3. It sends an HTTP request. The server runs the app code, queries the local database, and returns HTML (web) or JSON (mobile/API).
+4. The client renders the response and fetches any assets, again from the same server.
+
+</details>
+
+<details>
+<summary><b>Q2. Why is DNS usually not hosted on your own server?</b></summary>
+
+DNS needs to be **globally distributed, highly available, and fast**. If it were on your single server, a server outage would also make your domain unresolvable. Managed DNS (Route 53, Cloudflare) runs on anycast networks worldwide with very high availability, and it can do health-check-based failover later.
+
+</details>
+
+<details>
+<summary><b>Q3. What is a single point of failure (SPOF), and where are the SPOFs in a single-server design?</b></summary>
+
+A SPOF is any component whose failure takes the whole system down. In a single-server design **the server itself** is the SPOF, along with its disk (data loss) and its network link. Every later step in scaling removes SPOFs by adding redundancy.
+
+</details>
+
+<details>
+<summary><b>Q4. When is a single-server architecture actually the right choice?</b></summary>
+
+For an **MVP, prototype, internal tool, or very low traffic** (hundreds of users). It's cheapest and fastest to build and operate. The engineering skill is knowing it's a starting point, and having a plan for what to split out first (usually the database).
+
+</details>
+
+<details>
+<summary><b>Q5. What's the difference between serving a web browser and a mobile app from the same backend?</b></summary>
+
+Browsers often receive **HTML** (server-rendered) or a single-page app bundle plus JSON APIs. Mobile apps already contain the UI, so they only call **JSON APIs** (REST/GraphQL). A clean design exposes one API layer that both clients use, which keeps business logic in one place.
+
+</details>
+
 **Next →** [Step 2: Separate the database](02_separate_database.md)

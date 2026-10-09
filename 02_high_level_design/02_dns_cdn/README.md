@@ -43,3 +43,42 @@ A globally distributed network of edge proxy servers that serve content **close 
 - [ ] Walk through a DNS resolution end to end
 - [ ] Push vs pull CDN: when would you use each?
 - [ ] How do you invalidate CDN content?
+
+## 🧠 Test yourself: 5 interview questions
+
+Answer each one out loud first, then click it to check.
+
+<details>
+<summary><b>Q1. Walk through how DNS resolves a domain name.</b></summary>
+
+Browser cache → OS cache → **recursive resolver** (ISP or 8.8.8.8). On a miss, the resolver asks a **root** server → the **TLD** server (.com) → the domain's **authoritative** nameserver, which returns the A/AAAA record. Each answer is cached according to its TTL.
+
+</details>
+
+<details>
+<summary><b>Q2. CNAME vs A record vs alias record?</b></summary>
+
+**A/AAAA** maps a name to an IP. **CNAME** maps a name to another name (it can't be used at the zone apex like example.com). An **alias** (Route 53) works like a CNAME but is allowed at the apex and points to AWS resources (ELB, CloudFront) with no extra lookup.
+
+</details>
+
+<details>
+<summary><b>Q3. How can DNS be used for load balancing and failover?</b></summary>
+
+Return different IPs per query using **weighted round robin** (canary releases), **latency-based** or **geolocation** routing, and **health-checked failover** records that stop returning unhealthy endpoints. The limit is client caching (TTL), so changes aren't instant.
+
+</details>
+
+<details>
+<summary><b>Q4. How do you avoid serving stale assets from a CDN after a deploy?</b></summary>
+
+Use **content-hashed filenames** (main.a1b2c3.js) with long TTLs, and short TTLs or no-cache on HTML. The new HTML references new URLs, so the CDN fetches the new assets. Purges are the fallback for mistakes.
+
+</details>
+
+<details>
+<summary><b>Q5. Your origin gets hammered when CDN cache entries expire. What can you do?</b></summary>
+
+Add an **origin shield** (a mid-tier cache in front of the origin), raise TTLs on stable assets, use stale-while-revalidate / serve-stale-on-error, collapse simultaneous requests for the same object at the edge, and pre-warm popular content before big launches.
+
+</details>

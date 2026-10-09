@@ -33,3 +33,42 @@ Reconciliation job (daily): compare our ledger with PSP settlement files → fla
 
 ## ✅ Takeaways
 **Idempotency keys**, a double-entry append-only ledger, a payment state machine, saga + outbox, reconciliation, and never storing card data.
+
+## 🧠 Test yourself: 5 interview questions
+
+Answer each one out loud first, then click it to check.
+
+<details>
+<summary><b>Q1. How do you guarantee a customer is never charged twice?</b></summary>
+
+**Idempotency keys**: the client sends a unique key per payment attempt. The server stores key → result under a unique constraint, so a retried request returns the original result. Pass the same key to the payment provider so its side is idempotent too.
+
+</details>
+
+<details>
+<summary><b>Q2. What is a double-entry ledger, and why use it?</b></summary>
+
+Every money movement is recorded as **balanced debit and credit entries** summing to zero, in an **append-only** table. Corrections are new entries, never updates. This gives an audit trail, makes errors detectable (balances must reconcile), and is standard accounting practice.
+
+</details>
+
+<details>
+<summary><b>Q3. The payment provider call timed out. Did the charge happen?</b></summary>
+
+Unknown. Mark the payment **PENDING/UNKNOWN**, then **query the provider** with the same idempotency key or wait for its webhook to learn the real status. Never retry with a new key, which could double-charge.
+
+</details>
+
+<details>
+<summary><b>Q4. What is reconciliation?</b></summary>
+
+A periodic job (e.g., daily) that compares **your ledger** with the provider's and bank's **settlement reports**, flags mismatches (missing, duplicated, or amount differences), and triggers investigation or corrections. It's the final safety net.
+
+</details>
+
+<details>
+<summary><b>Q5. How do you keep card data out of your PCI scope?</b></summary>
+
+**Tokenization**: card details are collected by the provider's hosted fields or SDK, and you only store a **token**. Your servers never see the raw card number, which drastically reduces PCI DSS requirements.
+
+</details>

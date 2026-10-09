@@ -32,3 +32,42 @@ Scheduler: GPU-aware job queue (priority, quotas per tenant, gang scheduling for
 
 ## ✅ Takeaways
 Validation → GPU-aware scheduler → checkpointed training → **eval and safety gate** → registry → LoRA multiplexed serving. Emphasize tenant isolation and fault tolerance.
+
+## 🧠 Test yourself: 5 interview questions
+
+Answer each one out loud first, then click it to check.
+
+<details>
+<summary><b>Q1. LoRA vs full fine-tuning?</b></summary>
+
+**LoRA** trains small low-rank adapter matrices (~0.1–1% of the parameters): cheap, fast, small artifacts (MBs), and many adapters can share one base model at serving time. **Full fine-tuning** updates all weights: the best quality ceiling, but expensive training and serving (a whole model copy per customer).
+
+</details>
+
+<details>
+<summary><b>Q2. How do you schedule many training jobs on a shared GPU cluster?</b></summary>
+
+A GPU-aware scheduler with **gang scheduling** (all GPUs for a job start together), bin-packing of small jobs, **per-tenant quotas and priorities**, preemption of low-priority jobs (with checkpoints), and topology awareness (keep multi-GPU jobs on one node or fast interconnect).
+
+</details>
+
+<details>
+<summary><b>Q3. How do you survive GPU failures during a 20-hour training run?</b></summary>
+
+**Checkpoint frequently** to object storage (model + optimizer state + data position), detect failed nodes via health checks, and **automatically resume** from the last checkpoint on healthy hardware. Track the effective training time lost.
+
+</details>
+
+<details>
+<summary><b>Q4. Why add an evaluation gate before deployment?</b></summary>
+
+Fine-tuning can **degrade quality or remove safety behavior**. Run the customer's validation set + standard capability and **safety evals**, compare against the base model, and block or flag models that regress or fail safety thresholds.
+
+</details>
+
+<details>
+<summary><b>Q5. How do you keep each customer's training data isolated?</b></summary>
+
+Separate storage prefixes or buckets with **per-tenant encryption keys**, no shared caches, isolated job containers, a strict IAM scope per job, data deletion per the retention policy, and never feeding customer data into shared base models.
+
+</details>

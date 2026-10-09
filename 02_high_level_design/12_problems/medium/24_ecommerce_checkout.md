@@ -33,3 +33,42 @@ Client → CDN → LB → API gateway
 
 ## ✅ Takeaways
 AP cart (Dynamo-style) vs CP inventory/orders, **checkout saga with compensations + outbox**, conditional decrements for stock, idempotency everywhere.
+
+## 🧠 Test yourself: 5 interview questions
+
+Answer each one out loud first, then click it to check.
+
+<details>
+<summary><b>Q1. Why is the cart designed for availability rather than consistency?</b></summary>
+
+Being unable to add to the cart **directly loses revenue**, while a rare inconsistency (e.g., a deleted item reappearing) is minor and fixable at checkout. Amazon built Dynamo for exactly this. Concurrent cart versions are merged (union).
+
+</details>
+
+<details>
+<summary><b>Q2. How do you avoid overselling a limited-stock item?</b></summary>
+
+An **atomic conditional decrement**: UPDATE inventory SET qty = qty - n WHERE sku=? AND qty >= n. For extremely hot SKUs (flash deals), split the stock into several sub-counters or pre-allocate tokens in Redis, and reserve at checkout with an expiry.
+
+</details>
+
+<details>
+<summary><b>Q3. Walk through the checkout saga.</b></summary>
+
+Validate the cart and price → **reserve inventory** → **authorize payment** (idempotency key) → **create the order** (PLACED) → emit OrderPlaced via the **outbox** → fulfillment, notifications, analytics. On failure, compensate: release the inventory and void the authorization.
+
+</details>
+
+<details>
+<summary><b>Q4. How do you prevent duplicate orders from double-clicks or retries?</b></summary>
+
+Generate an **order/idempotency key** on the client when checkout starts. The server stores key → result with a unique constraint, so repeated submissions return the same order instead of creating a new one.
+
+</details>
+
+<details>
+<summary><b>Q5. How do you prepare for Prime Day traffic (10× normal)?</b></summary>
+
+**Pre-scale** capacity and run load tests, cache the catalog and pricing aggressively, put queues in front of non-critical work, rate-limit, use feature flags to **degrade gracefully** (turn off recommendations before checkout), and have runbooks and on-call ready.
+
+</details>

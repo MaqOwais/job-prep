@@ -36,3 +36,42 @@ Business service (CRUD for owners) → Business DB (SQL primary + read replicas)
 
 ## ✅ Takeaways
 **Geohash/quadtree** spatial indexing, query the cell + neighbors, an exact distance filter, a read-only replicated index.
+
+## 🧠 Test yourself: 5 interview questions
+
+Answer each one out loud first, then click it to check.
+
+<details>
+<summary><b>Q1. How does a geohash work, and why query the neighboring cells?</b></summary>
+
+It interleaves the latitude and longitude bits into a base32 string. **A longer shared prefix means a closer location**, and each extra character shrinks the cell. Two nearby points can sit just across a cell boundary with different prefixes, so you query the user's cell **plus its 8 neighbors**.
+
+</details>
+
+<details>
+<summary><b>Q2. Geohash vs quadtree?</b></summary>
+
+**Geohash:** fixed grid, simple, works as a plain DB or Redis key. **Quadtree:** an in-memory tree that splits dense areas into smaller cells (adaptive), so it handles the difference between Manhattan and a desert. It must be rebuilt or updated in memory.
+
+</details>
+
+<details>
+<summary><b>Q3. How do you choose the geohash precision for a 2 km radius?</b></summary>
+
+Choose the length whose cell size is comparable to the radius (~5 characters ≈ 4.9 × 4.9 km; 6 ≈ 1.2 × 0.6 km). Query the cell + neighbors. If there are too few results, drop a character to widen the search.
+
+</details>
+
+<details>
+<summary><b>Q4. Business data changes rarely. How does that shape the design?</b></summary>
+
+The geo index can be **rebuilt periodically** (nightly) and replicated read-only to every search server. It's small enough to sit in memory (~GBs), so there's no sharding and reads scale by adding replicas. Business details are served from a cache.
+
+</details>
+
+<details>
+<summary><b>Q5. How is this different from Uber's driver matching?</b></summary>
+
+Yelp's points are **static**, so a periodically rebuilt index is fine. Uber's drivers **move every few seconds**, which needs an in-memory index updated continuously (Redis GEO/H3), with the location stream going to Kafka rather than a DB write per ping.
+
+</details>

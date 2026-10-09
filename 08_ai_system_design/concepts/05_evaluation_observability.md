@@ -37,3 +37,42 @@ Production traces → sample failures (thumbs down, low judge scores) → label 
 - [ ] Design an evaluation plan for a RAG chatbot (offline + online)
 - [ ] Recall@k vs faithfulness: what does each catch?
 - [ ] Pitfalls of LLM-as-judge (position bias, verbosity bias, self-preference) and how to mitigate them
+
+## 🧠 Test yourself: 5 interview questions
+
+Answer each one out loud first, then click it to check.
+
+<details>
+<summary><b>Q1. How would you evaluate a RAG chatbot before launch?</b></summary>
+
+Build a **golden set** of real questions with reference answers and source documents. Measure **retrieval** (recall@k, MRR) and **generation** (faithfulness / groundedness, answer relevance, citation accuracy) with automated metrics plus an **LLM judge** calibrated against human ratings. Gate releases on these scores.
+
+</details>
+
+<details>
+<summary><b>Q2. What are the pitfalls of LLM-as-judge, and how do you mitigate them?</b></summary>
+
+**Position bias** (prefers the first answer), **verbosity bias**, **self-preference** (favors its own model family), and inconsistency. Mitigate: swap positions and average, use explicit rubrics, use pairwise comparisons, use a different judge model, and validate agreement against human labels.
+
+</details>
+
+<details>
+<summary><b>Q3. Which online metrics show whether an AI feature is working?</b></summary>
+
+Task completion and success rate, **thumbs up/down**, regeneration and edit rate, escalation or deflection rate (support bots), retention and repeat usage, latency (TTFT), and **cost per request**, plus guardrail trigger rates.
+
+</details>
+
+<details>
+<summary><b>Q4. What should you log for every LLM request?</b></summary>
+
+Prompt and template version, model and parameters, retrieved chunk IDs, tool calls and results, token counts, latency per step, cost, the user's feedback, and guardrail decisions. Redact PII, and link everything with a trace ID.
+
+</details>
+
+<details>
+<summary><b>Q5. What is the data flywheel?</b></summary>
+
+Production traces → find failures (thumbs down, low judge scores) → label them → add them to the **eval set** and training data → improve prompts, retrieval, or fine-tunes → redeploy → repeat. Each iteration makes the product measurably better.
+
+</details>

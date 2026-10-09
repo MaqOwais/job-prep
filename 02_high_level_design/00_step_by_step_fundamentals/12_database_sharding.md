@@ -56,4 +56,43 @@ The **shard (partition) key** decides which shard a row lives on. A good key:
 - [ ] List the 4 big problems sharding introduces, with a fix for each
 - [ ] Why does consistent hashing make resharding easier?
 
+## 🧠 Test yourself: 5 interview questions
+
+Answer each one out loud first, then click it to check.
+
+<details>
+<summary><b>Q1. Replication vs sharding: what does each solve?</b></summary>
+
+**Replication** copies the same data to multiple machines. It scales **reads** and provides availability. **Sharding** splits different data across machines. It scales **writes and storage**. Large systems use both: each shard is a primary with its own replicas.
+
+</details>
+
+<details>
+<summary><b>Q2. What makes a good shard key? Pick one for a chat app.</b></summary>
+
+High cardinality, an **even distribution** of data and traffic, and it matches the main access pattern so most queries hit **one shard**. For chat: **conversation_id**, since messages are read and written per conversation (bucketed by time for very large group chats).
+
+</details>
+
+<details>
+<summary><b>Q3. What is the celebrity (hot key) problem, and how do you handle it?</b></summary>
+
+One key gets a huge share of traffic (a celebrity's posts or profile), overloading its shard. Fixes: give hot entities **dedicated shards**, **split the key** (key#1..N) and aggregate across the pieces, cache aggressively, and handle these entities specially (e.g., fan-out on read).
+
+</details>
+
+<details>
+<summary><b>Q4. How does consistent hashing help with resharding?</b></summary>
+
+With hash % N, changing N remaps almost **every** key. With consistent hashing, keys and nodes sit on a ring, and adding or removing a node moves only the keys in **one neighboring segment (~1/N)**. Virtual nodes even out the distribution.
+
+</details>
+
+<details>
+<summary><b>Q5. What do you lose when you shard, and how do you compensate?</b></summary>
+
+**Cross-shard joins** (denormalize, or join in the application), **cross-shard transactions** (keep transactions within a shard, or use sagas/2PC), **global uniqueness** (Snowflake IDs), **simple global queries** (scatter-gather, or a separate analytics store), plus the operational cost of rebalancing.
+
+</details>
+
 **Next →** [Step 13: Putting it all together](13_putting_it_together.md)

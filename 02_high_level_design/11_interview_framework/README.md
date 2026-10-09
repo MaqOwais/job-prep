@@ -77,3 +77,42 @@ Let the interviewer steer, or pick the hardest parts yourself:
 2. Do all 7 steps out loud (record yourself).
 3. Compare with the problem notes in [12_problems](../12_problems/) and the primer solution.
 4. List 3 things you missed, and redo the problem 3 days later.
+
+## 🧠 Test yourself: 5 interview questions
+
+Answer each one out loud first, then click it to check.
+
+<details>
+<summary><b>Q1. What are the steps of a system design interview, in order?</b></summary>
+
+1) **Requirements** (functional + non-functional, scope), 2) **estimation**, 3) **API design**, 4) **data model**, 5) **high-level design** (walk a read and a write path), 6) **deep dives** on 2–3 hard parts, 7) **bottlenecks, failures, tradeoffs**, and a summary.
+
+</details>
+
+<details>
+<summary><b>Q2. Which non-functional requirements should you always ask about?</b></summary>
+
+Scale (users, QPS, data size, growth), latency targets, **availability vs consistency**, durability, read:write ratio, geographic distribution, security and compliance, and cost constraints.
+
+</details>
+
+<details>
+<summary><b>Q3. How do you handle an interviewer who keeps changing requirements?</b></summary>
+
+Treat it as the test: **acknowledge** the change, restate the new constraint, explain **what in the design changes and why** (e.g., "now strong consistency → move bookings to a transactional store"), and keep the rest. It shows adaptability and understanding of the tradeoffs.
+
+</details>
+
+<details>
+<summary><b>Q4. What do strong candidates do differently in deep dives?</b></summary>
+
+They **choose** the riskiest component, discuss **alternatives with tradeoffs**, tie choices to the requirements and numbers, cover failure modes (retries, idempotency, failover), and check in with the interviewer instead of monologuing.
+
+</details>
+
+<details>
+<summary><b>Q5. How should you end a design interview?</b></summary>
+
+A **30-second summary** of the architecture and key decisions, the known **bottlenecks and how you'd evolve** the design at 10× scale, what you'd monitor, and what you'd do with more time. Then ask your questions.
+
+</details>

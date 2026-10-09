@@ -54,3 +54,42 @@ S: one reason to change · O: extend, don't modify · L: subtypes must be substi
 3. What is the Liskov substitution principle? Give a violation.
 4. Abstract class vs interface.
 5. How does Python handle multiple inheritance?
+
+## 🧠 Test yourself: 5 interview questions
+
+Answer each one out loud first, then click it to check.
+
+<details>
+<summary><b>Q1. Explain the four pillars of OOP with one example.</b></summary>
+
+Take a payment system. **Encapsulation:** Account hides _balance behind deposit()/withdraw(). **Abstraction:** a PaymentMethod interface exposes pay(amount). **Inheritance:** CreditCard and UPI implement or extend PaymentMethod. **Polymorphism:** checkout calls method.pay(total) without knowing the concrete type.
+
+</details>
+
+<details>
+<summary><b>Q2. Abstract class vs interface?</b></summary>
+
+An **abstract class** can hold state, constructors, and partially implemented methods, and a class extends only one (in Java). An **interface** is a pure contract (Java 8+ allows default methods), and a class can implement many. In Python, use ABCs or typing.Protocol (structural/duck typing).
+
+</details>
+
+<details>
+<summary><b>Q3. Method overloading vs overriding?</b></summary>
+
+**Overloading:** same name, different parameter lists, resolved at **compile time** (Java/C++; Python doesn't support it natively and uses default args or singledispatch). **Overriding:** a subclass redefines an inherited method with the same signature, resolved at **runtime** (dynamic dispatch). That's polymorphism.
+
+</details>
+
+<details>
+<summary><b>Q4. Why must __eq__ and __hash__ be consistent in Python?</b></summary>
+
+Dicts and sets locate objects by **hash**, then confirm with **equality**. If two equal objects had different hashes, lookups would miss and you'd get duplicates in sets. Rule: a == b implies hash(a) == hash(b). Mutable objects used as keys break this if their fields change.
+
+</details>
+
+<details>
+<summary><b>Q5. How does Python resolve methods with multiple inheritance?</b></summary>
+
+With the **MRO** (Method Resolution Order), computed by **C3 linearization**: subclasses before parents, preserving the order of the bases, with each class appearing once. Inspect it with ClassName.__mro__. super() follows the MRO, which makes cooperative multiple inheritance (mixins) work.
+
+</details>

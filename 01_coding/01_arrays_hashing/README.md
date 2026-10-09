@@ -81,3 +81,42 @@ def top_k(nums, k):
 ## Go deeper
 - [NeetCode: Arrays & Hashing](https://neetcode.io/practice)
 - [Interactive Coding Challenges: arrays & strings, hash maps (by the primer's author)](https://github.com/donnemartin/interactive-coding-challenges)
+
+## 🧠 Test yourself: 5 interview questions
+
+Answer each one out loud first, then click it to check.
+
+<details>
+<summary><b>Q1. What's the time and space complexity of Two Sum with a hash map, and why check before inserting?</b></summary>
+
+**O(n) time, O(n) space**: one pass, with an O(1) average lookup per element. Checking for target − x **before** inserting x prevents pairing an element with itself (e.g., target 6 with a single 3).
+
+</details>
+
+<details>
+<summary><b>Q2. Why does 'Subarray Sum Equals K' need prefix sums + a hash map instead of a sliding window?</b></summary>
+
+With **negative numbers**, expanding or shrinking the window doesn't move the sum monotonically, so sliding window logic breaks. Prefix sums turn "sum of nums[i..j] = k" into "prefix[j] − prefix[i−1] = k", and a count map of earlier prefix sums finds all matches in O(n).
+
+</details>
+
+<details>
+<summary><b>Q3. How do you get Top K Frequent Elements in O(n)?</b></summary>
+
+Count with a hash map, then **bucket sort by frequency**: an array where index = frequency holds lists of values. Walk from the highest frequency down until you've collected k values. A heap gives O(n log k) as the alternative.
+
+</details>
+
+<details>
+<summary><b>Q4. Why is Longest Consecutive Sequence O(n) even with a nested while loop?</b></summary>
+
+You only start counting from x when **x − 1 isn't in the set** (x is a sequence start). Each element is then visited at most once by an inner loop across all starts, so the total work is O(n).
+
+</details>
+
+<details>
+<summary><b>Q5. When would a hash map's O(1) average become O(n), and does that matter in interviews?</b></summary>
+
+When many keys collide (bad hash function or adversarial input), operations degrade to O(n). In interviews, state "**O(1) average**" and move on, unless asked about worst cases or security (hash flooding).
+
+</details>

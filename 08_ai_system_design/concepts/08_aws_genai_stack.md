@@ -46,3 +46,42 @@ User ─▶ CloudFront ─▶ API Gateway (WebSocket/REST, Cognito auth, throttl
 - "Start serverless with Knowledge Bases to ship fast. Move to custom chunking, re-ranking, or self-hosted models only where the evals show you need them."
 - "For a startup, prompt caching + model routing + batch inference typically give the biggest cost wins."
 - Connect to **Well-Architected**: there's a **Generative AI Lens**.
+
+## 🧠 Test yourself: 5 interview questions
+
+Answer each one out loud first, then click it to check.
+
+<details>
+<summary><b>Q1. Which AWS services would you use for a serverless RAG application?</b></summary>
+
+**S3** (documents) → **Bedrock Knowledge Bases** (chunking, embeddings, vector store such as OpenSearch Serverless or S3 Vectors) → **API Gateway + Lambda** (or ECS) orchestration → **Bedrock** model invocation with streaming → **Bedrock Guardrails** → DynamoDB for chat history → CloudWatch / X-Ray for observability. Cognito for auth.
+
+</details>
+
+<details>
+<summary><b>Q2. Bedrock vs SageMaker: when would you choose each?</b></summary>
+
+**Bedrock:** a managed API to foundation models (Claude, Nova, Llama, ...) with RAG, agents, guardrails, and customization; no infrastructure. Fastest path for most GenAI apps. **SageMaker AI:** full control to train, fine-tune, and host **your own or open-weight models** on chosen instances (including Inferentia/Trainium) for custom ML or very specific serving needs.
+
+</details>
+
+<details>
+<summary><b>Q3. How would you reduce Bedrock costs for a startup?</b></summary>
+
+**Prompt caching** for repeated context, **model routing** (small, cheap models for simple requests), shorter prompts and retrieved context, **batch inference** for offline jobs, response caching, and provisioned throughput only for a steady base load. Track cost per feature.
+
+</details>
+
+<details>
+<summary><b>Q4. How do you keep GenAI traffic private and compliant on AWS?</b></summary>
+
+**VPC endpoints (PrivateLink)** to Bedrock so traffic stays off the internet, KMS encryption, IAM least privilege, CloudTrail audit logs, region selection for data residency, and Guardrails for PII. Confirm from AWS's current documentation that prompts aren't used to train the models.
+
+</details>
+
+<details>
+<summary><b>Q5. What is Bedrock AgentCore for?</b></summary>
+
+Running AI agents in production on AWS with any framework: a secure **runtime** with session isolation, **memory**, a **gateway** that turns APIs into agent tools (including MCP), **identity** for acting on behalf of users, built-in code interpreter and browser tools, and **observability**. It's the operational layer for agents. Check the current feature list before interviews.
+
+</details>

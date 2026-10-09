@@ -39,3 +39,42 @@ Phone (PSTN/SIP) or app (WebRTC) → Media gateway (codec, jitter buffer, echo c
 
 ## ✅ Takeaways
 **Streaming everything**, an explicit latency budget, VAD + turn detection, barge-in handling, and stateful sessions with sticky routing. Compare the cascaded and speech-to-speech approaches.
+
+## 🧠 Test yourself: 5 interview questions
+
+Answer each one out loud first, then click it to check.
+
+<details>
+<summary><b>Q1. Break down an 800 ms voice-to-voice latency budget.</b></summary>
+
+For example: end-of-turn detection ~200 ms + STT finalization ~100 ms + LLM time to first token ~250 ms + TTS first audio ~150 ms + network ~100 ms. Everything must **stream**, and the stages overlap rather than run one after another.
+
+</details>
+
+<details>
+<summary><b>Q2. How do you handle the user interrupting the bot (barge-in)?</b></summary>
+
+Full-duplex audio with **echo cancellation** (so the bot doesn't hear itself), **VAD** detecting user speech while TTS plays, then **immediately stop the TTS and cancel the LLM generation**, keep what the user heard in the conversation history, and listen to the new utterance.
+
+</details>
+
+<details>
+<summary><b>Q3. Cascaded STT→LLM→TTS vs a speech-to-speech model?</b></summary>
+
+**Cascaded:** modular (best component for each stage), easy to inspect and log text, use any LLM and tools, and text guardrails apply. Each hop adds latency. **Speech-to-speech:** lowest latency and natural prosody and emotion, but less control and transparency. Text guardrails and tooling are harder to apply.
+
+</details>
+
+<details>
+<summary><b>Q4. How do you avoid awkward silence while a tool call runs?</b></summary>
+
+Speak a short **filler** immediately ("Let me check that for you…"), stream the partial answer as soon as possible, run tool calls in parallel where you can, and set timeouts with graceful fallback phrases.
+
+</details>
+
+<details>
+<summary><b>Q5. How do you scale to 10,000 concurrent calls?</b></summary>
+
+Each call is a **stateful, long-lived session**, so use sticky routing to session servers and plan capacity by concurrent calls. STT, LLM, and TTS run in shared, autoscaled GPU pools. Use regional deployment near the telephony provider, plus graceful degradation and human transfer when overloaded.
+
+</details>

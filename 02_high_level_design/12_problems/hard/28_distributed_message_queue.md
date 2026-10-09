@@ -38,3 +38,42 @@ Storage per partition: segment files (e.g. 1 GB) + sparse offset index; old segm
 
 ## ✅ Takeaways
 **Partitioned, replicated append-only log** with offsets, leader/follower + ISR + acks, consumer groups, zero-copy sequential I/O, and an explanation of the delivery semantics.
+
+## 🧠 Test yourself: 5 interview questions
+
+Answer each one out loud first, then click it to check.
+
+<details>
+<summary><b>Q1. How does Kafka guarantee ordering?</b></summary>
+
+Only **within a partition**: messages are appended sequentially with increasing offsets and consumed in order. Producers send related messages (same key) to the same partition via hash(key). There's no global order across partitions.
+
+</details>
+
+<details>
+<summary><b>Q2. How does Kafka avoid losing acknowledged messages?</b></summary>
+
+Replication factor 3 with one **leader** and followers. With **acks=all** and **min.insync.replicas=2**, a write is acknowledged only after it's in the in-sync replicas. If the leader fails, a new leader is elected **from the ISR**, so committed data survives.
+
+</details>
+
+<details>
+<summary><b>Q3. Why is Kafka so fast?</b></summary>
+
+**Sequential disk I/O** (append-only logs), heavy use of the OS **page cache**, **zero-copy** transfer (sendfile) from disk to socket, producer **batching and compression**, and consumers pulling at their own pace, so the broker keeps no per-message state for consumers.
+
+</details>
+
+<details>
+<summary><b>Q4. How do consumer groups work?</b></summary>
+
+Each partition is assigned to **exactly one consumer** in a group, which gives parallelism up to the number of partitions. Different groups each receive all messages independently. Consumers commit **offsets**, and rebalancing reassigns partitions when consumers join or leave.
+
+</details>
+
+<details>
+<summary><b>Q5. Kafka vs SQS: when would you use each?</b></summary>
+
+**Kafka:** high-throughput event streaming, **replay**, multiple independent consumer groups, ordered partitions, stream processing. **SQS:** simple fully managed work queues where each message is processed once and deleted, with no replay and minimal operations.
+
+</details>

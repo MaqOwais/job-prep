@@ -65,3 +65,42 @@ while not done and steps < MAX_STEPS:
 - [ ] Draw the orchestrator-worker pattern using your own research project
 - [ ] How do you stop an agent from looping forever or overspending?
 - [ ] What is MCP and why does it matter?
+
+## 🧠 Test yourself: 5 interview questions
+
+Answer each one out loud first, then click it to check.
+
+<details>
+<summary><b>Q1. Workflow vs agent: when do you use each?</b></summary>
+
+A **workflow** runs LLM calls along **predefined code paths** (chains, routing, parallel steps): predictable, testable, cheaper. Use it when the steps are known. An **agent** lets the **LLM decide** the next tool call in a loop. Use it when the steps can't be known in advance (open-ended research, coding). Start with the simplest one that works.
+
+</details>
+
+<details>
+<summary><b>Q2. Describe the orchestrator-worker pattern using your own project.</b></summary>
+
+An **orchestrator** agent breaks the task into subtasks and delegates them to **specialized workers** (in my VR project: router, analyst, configuration/creation, and data-fetching agents), each with focused prompts and tools. Workers return condensed results, and the orchestrator synthesizes or decides the next step. Pros: separation of concerns, parallelism. Cons: more tokens and harder debugging.
+
+</details>
+
+<details>
+<summary><b>Q3. How do you stop an agent from looping forever or running up costs?</b></summary>
+
+**Max steps**, **timeouts** per tool and per task, **token and dollar budgets** per task, stop conditions, detection of repeated identical actions, and graceful partial results when limits hit. Trace every step to find loops.
+
+</details>
+
+<details>
+<summary><b>Q4. What is MCP, and why does it matter?</b></summary>
+
+The **Model Context Protocol** is an open standard for exposing **tools, resources, and prompts** to AI applications through a common client-server interface. You write a tool integration once and any MCP-compatible agent or framework can use it. It's becoming the default way to connect agents to external systems.
+
+</details>
+
+<details>
+<summary><b>Q5. How do you design agent memory?</b></summary>
+
+**Short-term:** the conversation history, trimmed or summarized near the context limit. **Long-term:** extracted facts and preferences stored in a vector or KV store and retrieved by relevance. **Task state:** durable checkpoints so long tasks survive crashes. Namespace memory per user, and let users view and delete it.
+
+</details>

@@ -52,3 +52,42 @@ A server in front of your backends that forwards client requests and returns res
 - [ ] L4 vs L7: give one use case for each
 - [ ] Explain consistent hashing and virtual nodes with a drawing
 - [ ] LB vs reverse proxy vs API gateway
+
+## 🧠 Test yourself: 5 interview questions
+
+Answer each one out loud first, then click it to check.
+
+<details>
+<summary><b>Q1. Load balancer vs reverse proxy vs API gateway: what's the difference?</b></summary>
+
+A **reverse proxy** sits in front of servers (even one) and handles TLS, caching, compression, and hides the backends. A **load balancer** is a reverse proxy whose main job is spreading traffic across many servers with health checks. An **API gateway** adds API concerns: authentication, rate limiting, request routing to microservices, transformation, and API keys.
+
+</details>
+
+<details>
+<summary><b>Q2. Explain consistent hashing and why virtual nodes are used.</b></summary>
+
+Servers and keys are hashed onto a ring, and each key belongs to the next server clockwise. Adding or removing a server only moves keys in **one segment (~1/N)**, unlike hash % N, which remaps almost everything. **Virtual nodes** (many ring points per server) spread load evenly and make it easy to weight bigger servers.
+
+</details>
+
+<details>
+<summary><b>Q3. How does a load balancer handle a deploy without dropping requests?</b></summary>
+
+**Connection draining**: mark the instance as deregistering, stop sending it new requests, let in-flight requests finish (up to a timeout), then stop it. Combined with health checks and rolling or blue/green deploys, users see no errors.
+
+</details>
+
+<details>
+<summary><b>Q4. What is 'power of two choices' load balancing?</b></summary>
+
+Pick **two servers at random** and send the request to the less loaded one. It's almost as good as a global least-loaded choice, but needs no central state, which makes it scale well across many load balancers. It's used in Envoy and NGINX variants.
+
+</details>
+
+<details>
+<summary><b>Q5. When would you choose an NLB (L4) over an ALB (L7)?</b></summary>
+
+For non-HTTP protocols (raw TCP/UDP, gaming, MQTT), when you need **static IPs** or extreme throughput with ultra-low latency, or when you want TLS passthrough end to end. Use ALB for HTTP routing, host/path rules, WebSockets, and auth integration.
+
+</details>

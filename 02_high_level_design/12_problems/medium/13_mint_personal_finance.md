@@ -32,3 +32,42 @@ Monthly analysis: MapReduce/Spark over transaction logs → monthly_spending tab
 
 ## ✅ Takeaways
 Scheduled async ingestion pipeline + categorization + incremental budget aggregates + strong security.
+
+## 🧠 Test yourself: 5 interview questions
+
+Answer each one out loud first, then click it to check.
+
+<details>
+<summary><b>Q1. Why ingest bank transactions asynchronously?</b></summary>
+
+Bank and aggregator APIs are **slow, rate-limited, and flaky**. A scheduler enqueues refresh jobs, and workers pull, retry with backoff, and write idempotently. The user-facing app never blocks on a bank call.
+
+</details>
+
+<details>
+<summary><b>Q2. How do you avoid duplicate transactions when retries happen?</b></summary>
+
+Use an **idempotent upsert** keyed on (account_id, bank_transaction_id), or a natural key hash if the bank lacks IDs. Retries and overlapping date ranges then don't create duplicates.
+
+</details>
+
+<details>
+<summary><b>Q3. How are transactions categorized?</b></summary>
+
+Start with a **merchant → category** lookup table, then an ML classifier for unknown merchants (features: merchant text, MCC code, amount). **User corrections** override the result and feed back into training.
+
+</details>
+
+<details>
+<summary><b>Q4. How do you avoid wasting work on inactive users?</b></summary>
+
+Only refresh accounts for users **active recently** (e.g., the last 30 days). Refresh the rest on login. This greatly reduces API calls and costs.
+
+</details>
+
+<details>
+<summary><b>Q5. What security measures does a finance app need?</b></summary>
+
+**OAuth/token-based** bank connections (via an aggregator) instead of stored bank passwords, encryption at rest with KMS and in transit, least-privilege access, audit logs, MFA, and SOC 2 / PCI-aligned controls.
+
+</details>

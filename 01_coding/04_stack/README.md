@@ -71,3 +71,42 @@ def largest_rectangle(h):
 | [ ] | [Largest Rectangle in Histogram](https://leetcode.com/problems/largest-rectangle-in-histogram/) | Increasing stack, extend start index on pop |
 | [ ] | [Basic Calculator](https://leetcode.com/problems/basic-calculator/) | Push (result, sign) on `(` |
 | [ ] | [Maximal Rectangle](https://leetcode.com/problems/maximal-rectangle/) | Histogram per row |
+
+## 🧠 Test yourself: 5 interview questions
+
+Answer each one out loud first, then click it to check.
+
+<details>
+<summary><b>Q1. What is a monotonic stack, and what problems does it solve?</b></summary>
+
+A stack kept in increasing or decreasing order. When a new element breaks the order, you pop, and the new element is the **next greater (or smaller) element** for everything popped. It solves next-greater-element, daily temperatures, stock span, and histogram areas in **O(n)**.
+
+</details>
+
+<details>
+<summary><b>Q2. Why store indices instead of values in a monotonic stack?</b></summary>
+
+Indices give you both the **value** (array lookup) and the **distance or width** (i − j), which you need for "days until warmer" or rectangle widths.
+
+</details>
+
+<details>
+<summary><b>Q3. How do you implement Min Stack with O(1) getMin?</b></summary>
+
+Push pairs **(value, min so far)**, or keep a second stack of minimums. getMin reads the top's stored minimum. Popping restores the previous minimum automatically.
+
+</details>
+
+<details>
+<summary><b>Q4. Explain Largest Rectangle in Histogram.</b></summary>
+
+Keep an **increasing stack** of (start_index, height). When a lower bar arrives, pop the taller bars. Each popped bar's rectangle extends from its start to the current index (area = height × width), and the new bar inherits the earliest start popped. Add a trailing 0 to flush the stack. O(n).
+
+</details>
+
+<details>
+<summary><b>Q5. How do you implement a queue using two stacks with amortized O(1) operations?</b></summary>
+
+Push onto an **in** stack. For pop or peek, if the **out** stack is empty, move everything from in to out (reversing the order), then pop from out. Each element moves at most once, so the cost is amortized O(1).
+
+</details>

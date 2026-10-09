@@ -53,3 +53,42 @@ Quality vs latency vs cost vs context length vs data privacy vs licensing (open 
 - [ ] Explain prefill vs decode and which one drives TTFT
 - [ ] Estimate monthly API cost for a given traffic level
 - [ ] RAG vs fine-tuning: give one example where each is right
+
+## 🧠 Test yourself: 5 interview questions
+
+Answer each one out loud first, then click it to check.
+
+<details>
+<summary><b>Q1. Prefill vs decode: what's the difference, and which drives time-to-first-token?</b></summary>
+
+**Prefill** processes the whole prompt in parallel (compute-bound) and produces the KV cache. It determines **TTFT**, along with queueing. **Decode** generates tokens one at a time (memory-bandwidth-bound) and determines **tokens/second**. Long prompts hurt TTFT; long outputs hurt total latency.
+
+</details>
+
+<details>
+<summary><b>Q2. Estimate the GPU memory needed for a 13B-parameter model.</b></summary>
+
+Weights = params × bytes per param. FP16: 13B × 2 B ≈ **26 GB**. INT8 ≈ 13 GB. INT4 ≈ 6.5–7 GB. Add the **KV cache** (grows with batch size × context length) and runtime overhead, so in practice an FP16 13B model needs a 40–80 GB GPU for meaningful concurrency.
+
+</details>
+
+<details>
+<summary><b>Q3. RAG or fine-tuning? Give an example where each is right.</b></summary>
+
+**RAG** supplies **knowledge**: private, frequently changing, or citable facts (e.g., answering from company policies updated weekly). **Fine-tuning** shapes **behavior**: a consistent output format, tone, domain jargon, or distilling a big model's skill into a small cheap one (e.g., extracting structured fields from invoices). Often you combine both.
+
+</details>
+
+<details>
+<summary><b>Q4. How do you estimate the monthly cost of an LLM feature?</b></summary>
+
+requests/month × (input tokens × input price + output tokens × output price). Example: 30M requests × (2,000 × $3/M + 300 × $15/M) ≈ 30M × $0.0105 ≈ **$315K/month**. That's why prompt caching, shorter contexts, smaller models for easy queries, and batching matter.
+
+</details>
+
+<details>
+<summary><b>Q5. What does temperature do, and what values suit which tasks?</b></summary>
+
+It scales the randomness of token sampling. **~0** gives near-deterministic, focused output, suited to extraction, classification, code, and tool calls. **0.7–1.0** gives diverse, creative output, suited to brainstorming and writing. Pair it with top-p. For reliability you also use structured output and constrained decoding.
+
+</details>

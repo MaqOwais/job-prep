@@ -82,3 +82,42 @@ def max_profit(prices):
 | [ ] | [Distinct Subsequences](https://leetcode.com/problems/distinct-subsequences/) | If equal: use + skip, else skip |
 | [ ] | [Burst Balloons](https://leetcode.com/problems/burst-balloons/) | Interval DP: choose the **last** balloon to burst in (l, r) |
 | [ ] | [Regular Expression Matching](https://leetcode.com/problems/regular-expression-matching/) | `*` → zero occurrences, or one occurrence and stay |
+
+## 🧠 Test yourself: 5 interview questions
+
+Answer each one out loud first, then click it to check.
+
+<details>
+<summary><b>Q1. Write the Longest Common Subsequence recurrence.</b></summary>
+
+If a[i−1] == b[j−1]: dp[i][j] = dp[i−1][j−1] + 1. Otherwise dp[i][j] = max(dp[i−1][j], dp[i][j−1]). Base: row 0 and column 0 are 0. **O(m·n)** time, and space reducible to O(min(m, n)).
+
+</details>
+
+<details>
+<summary><b>Q2. What does each transition in Edit Distance represent?</b></summary>
+
+dp[i][j] = the cost of converting a[:i] into b[:j]. If the characters match: dp[i−1][j−1]. Otherwise 1 + min(**dp[i−1][j]** (delete), **dp[i][j−1]** (insert), **dp[i−1][j−1]** (replace)). Base cases: dp[i][0] = i and dp[0][j] = j.
+
+</details>
+
+<details>
+<summary><b>Q3. For a knapsack in a 1-D array, why does the loop direction matter?</b></summary>
+
+**0/1 knapsack** (each item once): iterate capacity **downward**, so dp[c − w] still holds the value from the previous item (not reused). **Unbounded**: iterate **upward**, so an item can be reused within the same pass.
+
+</details>
+
+<details>
+<summary><b>Q4. Coin Change II counts combinations. Why do coins go in the outer loop?</b></summary>
+
+With coins outer and amounts inner, each combination is built in a **fixed coin order**, so {1,2} and {2,1} count once. Swapping the loops counts **permutations** (ordered sequences) instead.
+
+</details>
+
+<details>
+<summary><b>Q5. How do you model 'stock with cooldown' as DP?</b></summary>
+
+As a **state machine**: state (day i, holding or not). Not holding: skip, or buy (−price, move to holding). Holding: skip, or sell (+price, then jump to i + 2 for the cooldown). Memoize f(i, holding).
+
+</details>

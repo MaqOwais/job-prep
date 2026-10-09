@@ -65,3 +65,42 @@ def can_complete_circuit(gas, cost):
 | ✓ | Problem | Hint |
 |---|---|---|
 | [ ] | [Candy](https://leetcode.com/problems/candy/) | Left pass, then right pass, take the max |
+
+## 🧠 Test yourself: 5 interview questions
+
+Answer each one out loud first, then click it to check.
+
+<details>
+<summary><b>Q1. How do you justify that a greedy choice is correct?</b></summary>
+
+With an **exchange argument**: take any optimal solution and show you can swap in the greedy choice without making it worse. Or show the greedy choice "stays ahead" at every step. If you can't argue it, it's probably DP.
+
+</details>
+
+<details>
+<summary><b>Q2. How does Jump Game work greedily?</b></summary>
+
+Track the **farthest index reachable** so far. Scan left to right. If the current index exceeds the reach, return false. Otherwise update reach = max(reach, i + nums[i]). O(n).
+
+</details>
+
+<details>
+<summary><b>Q3. Explain Kadane's algorithm.</b></summary>
+
+At each element, either **extend** the previous subarray or **start fresh**: cur = max(x, cur + x), and best = max(best, cur). A negative running sum never helps a future subarray, so you drop it. O(n), O(1) space.
+
+</details>
+
+<details>
+<summary><b>Q4. Why does Gas Station's 'reset the start' trick work?</b></summary>
+
+If the tank goes negative going from start to i, **no station between start and i** can be a valid start either (each would arrive at i with even less gas). So jump the start to i + 1. If the total gas ≥ total cost, the last start is valid.
+
+</details>
+
+<details>
+<summary><b>Q5. Give a problem where greedy fails but DP works.</b></summary>
+
+**Coin change with arbitrary denominations**: coins {1, 3, 4} for amount 6. Greedy takes 4 + 1 + 1 = 3 coins, but the optimum is 3 + 3 = 2 coins. Greedy is only safe for canonical coin systems like US coins.
+
+</details>

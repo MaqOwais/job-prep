@@ -37,3 +37,42 @@ Metering: token counts → Kafka → billing; observability: TTFT, TPOT, queue t
 
 ## ✅ Takeaways
 Frontends + **smart router (prefix affinity, least tokens, priorities)** + GPU model pools (TP/PP, LoRA) + KV-aware autoscaling + batch backfill + metering. Lead with GPU math.
+
+## 🧠 Test yourself: 5 interview questions
+
+Answer each one out loud first, then click it to check.
+
+<details>
+<summary><b>Q1. Estimate the GPUs needed for 10K requests/s with 300 output tokens each.</b></summary>
+
+10K × 300 = **3M output tokens/s**. If one replica sustains ~2–5K tokens/s with continuous batching, you need roughly **600–1,500 replicas** (× GPUs per replica for large models), plus headroom and redundancy. State your assumptions about model size and throughput.
+
+</details>
+
+<details>
+<summary><b>Q2. How should the router pick a replica?</b></summary>
+
+Prefer replicas that already hold the **prompt prefix in their KV cache** (cache affinity), then **least outstanding tokens** (not request count), and respect health and priority tiers. Round robin ignores very different request costs.
+
+</details>
+
+<details>
+<summary><b>Q3. How do you give fair service to many tenants?</b></summary>
+
+Per-tenant **token rate limits** and quotas, **priority tiers** (interactive > standard > batch), weighted fair queuing, admission control and load shedding under overload, and **provisioned throughput** for customers who pay for guaranteed capacity.
+
+</details>
+
+<details>
+<summary><b>Q4. Why separate prefill and decode onto different GPUs?</b></summary>
+
+Prefill is **compute-bound** and bursty (long prompts), decode is **memory-bandwidth-bound** and steady. On the same GPU, long prefills stall the token streams of other requests. Disaggregating lets each pool use the right hardware and batching strategy, improving both TTFT and tokens/s.
+
+</details>
+
+<details>
+<summary><b>Q5. How do you serve hundreds of fine-tuned variants cheaply?</b></summary>
+
+Use **LoRA adapters** on a shared base model: keep the base weights loaded once, hot-swap or batch multiple small adapters per request (multi-LoRA serving), and only dedicate GPUs to full fine-tunes that justify it.
+
+</details>

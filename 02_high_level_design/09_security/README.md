@@ -42,3 +42,42 @@ TLS + an auth service/gateway + rate limiting + encryption at rest + audit logs 
 - [ ] Session vs JWT tradeoffs
 - [ ] How does OAuth "Log in with Google" work, step by step?
 - [ ] Name 5 attacks and their defenses
+
+## 🧠 Test yourself: 5 interview questions
+
+Answer each one out loud first, then click it to check.
+
+<details>
+<summary><b>Q1. Authentication vs authorization?</b></summary>
+
+**Authentication** verifies **who** you are (password + MFA, SSO, OAuth/OIDC login). **Authorization** decides **what** you may do (RBAC roles, ABAC attributes, resource ACLs). A 401 means not authenticated; a 403 means authenticated but not allowed.
+
+</details>
+
+<details>
+<summary><b>Q2. How does 'Log in with Google' (OAuth 2.0 + OIDC) work?</b></summary>
+
+The app redirects the user to Google with its client_id, scopes, and a redirect URI (+ PKCE). The user logs in and consents. Google redirects back with an **authorization code**. The app's backend exchanges the code for an **access token** and **ID token** (OIDC, a JWT with the user's identity). The app then creates its own session.
+
+</details>
+
+<details>
+<summary><b>Q3. How should passwords be stored?</b></summary>
+
+Never in plaintext or with reversible encryption. Hash them with a **slow, salted, adaptive** algorithm (**argon2id, bcrypt, scrypt**) with a unique salt per user and a tuned cost factor. Add rate limiting, MFA, and breached-password checks.
+
+</details>
+
+<details>
+<summary><b>Q4. How do you prevent SQL injection and XSS?</b></summary>
+
+**SQL injection:** use **parameterized queries / prepared statements** or an ORM; never build SQL by concatenating strings; use a least-privilege DB user. **XSS:** **escape output** for its context, use templating that escapes automatically, a Content-Security-Policy, HttpOnly cookies, and sanitize any HTML users can submit.
+
+</details>
+
+<details>
+<summary><b>Q5. What security items should you mention in any system design answer?</b></summary>
+
+TLS everywhere (mTLS internally), authentication at the gateway, authorization checks in services, rate limiting / WAF / DDoS protection, encryption at rest with managed keys, secrets in a secrets manager, least-privilege IAM, audit logs, and PII handling and compliance (GDPR/HIPAA).
+
+</details>

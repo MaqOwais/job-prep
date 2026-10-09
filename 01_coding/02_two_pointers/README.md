@@ -67,3 +67,42 @@ def three_sum(nums):
 | ✓ | Problem | Hint |
 |---|---|---|
 | [ ] | [Trapping Rain Water](https://leetcode.com/problems/trapping-rain-water/) | Water = min(maxLeft, maxRight) − h. Move the side with the smaller max. |
+
+## 🧠 Test yourself: 5 interview questions
+
+Answer each one out loud first, then click it to check.
+
+<details>
+<summary><b>Q1. When does the two-pointer technique apply?</b></summary>
+
+When the input is **sorted** (or you can sort it), and a pointer move lets you **discard candidates**: pair or triplet sums, palindromes, merging sorted arrays, partitioning in place, removing duplicates. The signal is a monotonic relationship between the pointer moves and the result.
+
+</details>
+
+<details>
+<summary><b>Q2. Why is 3Sum O(n²), and how do you avoid duplicate triplets?</b></summary>
+
+Sort (O(n log n)), then for each i run a two-pointer scan over the rest (O(n)) → O(n²) total. Avoid duplicates by **skipping equal values** for i and, after finding a match, advancing l past equal neighbors.
+
+</details>
+
+<details>
+<summary><b>Q3. In Container With Most Water, why move the shorter wall?</b></summary>
+
+The area is limited by the **shorter** wall. Moving the taller wall inward can only reduce the width without raising the limiting height, so it can never improve the area. Moving the shorter wall is the only move that might find a taller limit.
+
+</details>
+
+<details>
+<summary><b>Q4. Explain the two-pointer solution to Trapping Rain Water.</b></summary>
+
+Water at i = min(maxLeft, maxRight) − height[i]. Keep l and r with leftMax and rightMax. **Move the side with the smaller max**: its water is determined by its own max, since the other side is known to be at least as tall. O(n) time, O(1) space.
+
+</details>
+
+<details>
+<summary><b>Q5. What's the difference between opposite-end pointers and fast/slow pointers?</b></summary>
+
+**Opposite ends** converge toward the middle (sorted pair sums, palindromes). **Same direction** (read/write or fast/slow) moves both forward at different speeds (remove duplicates in place, move zeroes, cycle detection in linked lists).
+
+</details>

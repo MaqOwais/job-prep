@@ -37,3 +37,42 @@ User → API → Task service (creates task_id, durable state in DB) → returns
 
 ## ✅ Takeaways
 Orchestrator-worker with **parallel specialists**, condensed context hand-offs, durable workflows, budgets, citation verification. Tell it as **your** story.
+
+## 🧠 Test yourself: 5 interview questions
+
+Answer each one out loud first, then click it to check.
+
+<details>
+<summary><b>Q1. Why use multiple agents for research rather than one?</b></summary>
+
+Research splits into **independent subtopics** that can be explored **in parallel**, and separate agents keep separate context windows (no single context overflowing with raw pages). The tradeoff is many more tokens and coordination complexity, which is justified for high-value, open-ended tasks.
+
+</details>
+
+<details>
+<summary><b>Q2. How do workers pass results back without blowing up the orchestrator's context?</b></summary>
+
+Workers return **condensed findings with source URLs and key quotes**, not full documents. The orchestrator keeps a compact plan and a notes store, and only the writer pulls the details it needs for the final report.
+
+</details>
+
+<details>
+<summary><b>Q3. How do you make long-running research tasks reliable?</b></summary>
+
+A **durable workflow engine** (Step Functions / Temporal) that checkpoints after each step, retries per tool call with timeouts, idempotent steps, per-task budgets, and partial results if limits are reached. Progress is streamed to the user via SSE.
+
+</details>
+
+<details>
+<summary><b>Q4. How do you ensure the final report is accurate?</b></summary>
+
+Rank sources by quality, require **citations for every claim**, run a **verifier agent** that checks each claim against its cited source, surface conflicting sources explicitly, and evaluate against rubrics (accuracy, completeness, citation correctness).
+
+</details>
+
+<details>
+<summary><b>Q5. How would you explain your own multi-agent research project in this interview?</b></summary>
+
+Map it onto this design: "My **router** classified requests, a **manager/orchestrator** planned and delegated, **analyst** and **data-fetching** agents used specialized tools, and **creation** agents produced the configurations for the VR scenario." Then describe one tradeoff you made, one failure you debugged, and how you evaluated it.
+
+</details>

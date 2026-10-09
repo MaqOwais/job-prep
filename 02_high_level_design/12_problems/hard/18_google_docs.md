@@ -37,3 +37,42 @@ Doc metadata + ACLs (SQL)   ·   Presence/cursor service (Redis, ephemeral)   ·
 
 ## ✅ Takeaways
 Explain **OT vs CRDT** clearly, a per-document session owner, an op log + snapshots, WebSockets, ephemeral presence.
+
+## 🧠 Test yourself: 5 interview questions
+
+Answer each one out loud first, then click it to check.
+
+<details>
+<summary><b>Q1. What problem do OT and CRDTs solve?</b></summary>
+
+**Concurrent edits** to the same document: positions shift when others insert or delete, so applying raw operations in different orders makes the copies **diverge**. Both techniques guarantee every replica converges to the same document.
+
+</details>
+
+<details>
+<summary><b>Q2. OT vs CRDT: what's the difference?</b></summary>
+
+**OT (Operational Transformation):** a central server orders operations and **transforms** incoming ones against concurrent ones (adjusting positions). Proven in Google Docs, but needs a server. **CRDTs:** each element has a unique ordered ID, so operations **commute** and merge without coordination. Great for offline and peer-to-peer, at a metadata overhead.
+
+</details>
+
+<details>
+<summary><b>Q3. Why assign one server as the owner of each document?</b></summary>
+
+A single **session owner** keeps the document in memory, orders all operations for it (simplifying OT), and broadcasts updates. Route doc_id to its owner via consistent hashing or a registry; a single document never needs more than one server.
+
+</details>
+
+<details>
+<summary><b>Q4. How are documents persisted and loaded quickly?</b></summary>
+
+An append-only **operation log** (never lose edits) plus periodic **snapshots** every N operations. Loading = latest snapshot + replay of the remaining ops. Version history comes from the same log and snapshots.
+
+</details>
+
+<details>
+<summary><b>Q5. How are cursors and presence handled?</b></summary>
+
+As **ephemeral** state over the same WebSocket. Clients broadcast their cursor position and selection, throttled to a few updates per second. Stored in memory or Redis with a TTL, never persisted.
+
+</details>

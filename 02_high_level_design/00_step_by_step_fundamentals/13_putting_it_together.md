@@ -59,3 +59,42 @@ Blank page. Timer for 10 minutes. Starting from one server, **add each component
 3. **Quick reference:** [HLD cheat sheet](../00_hld_cheatsheet.md).
 4. **Practice:** start with 🟢 [URL shortener](../12_problems/easy/01_url_shortener_pastebin.md) and [Scale on AWS](../12_problems/easy/04_scale_to_millions_aws.md), then work through [all 29 problems](../12_problems/README.md).
 5. **Beyond Step 12** (each is a chapter-level topic, and each has a problem here): [rate limiter](../12_problems/easy/02_rate_limiter.md) · [consistent hashing](../03_load_balancing_reverse_proxy/) · [key-value store](../12_problems/hard/17_distributed_kv_store.md) · [unique ID generator](../12_problems/easy/05_unique_id_generator.md) · [URL shortener](../12_problems/easy/01_url_shortener_pastebin.md) · [web crawler](../12_problems/medium/07_web_crawler.md) · [notification system](../12_problems/medium/09_notification_system.md) · [news feed](../12_problems/medium/06_twitter_news_feed.md) · [chat](../12_problems/medium/08_chat_system.md) · [autocomplete](../12_problems/medium/10_typeahead_autocomplete.md) · [YouTube](../12_problems/hard/15_youtube_video_streaming.md) · [Google Drive](../12_problems/medium/22_dropbox_file_sync.md)
+
+## 🧠 Test yourself: 5 interview questions
+
+Answer each one out loud first, then click it to check.
+
+<details>
+<summary><b>Q1. Walk through scaling an app from one user to millions in two minutes.</b></summary>
+
+Single server + DNS → separate DB tier → horizontal web tier behind a **load balancer** → **DB replication** (reads on replicas, failover) → **cache** for hot reads → **CDN** for static assets → **stateless** web tier (sessions in Redis) for autoscaling → **multiple data centers** with GeoDNS → **message queue** for async work → **logging/metrics/CI-CD** → **sharding** when writes outgrow one primary.
+
+</details>
+
+<details>
+<summary><b>Q2. Which components remove single points of failure, and which improve performance?</b></summary>
+
+**Removing SPOFs:** load balancer pairs, multiple web servers, DB replicas with failover, cache clusters, multiple AZs and data centers. **Performance:** cache, CDN, read replicas, async queues, sharding (writes and storage), stateless autoscaling (throughput).
+
+</details>
+
+<details>
+<summary><b>Q3. In what order would you add caching vs sharding, and why?</b></summary>
+
+**Cache (and read replicas) first.** They're cheap, low risk, and fix the common read-heavy bottleneck. **Sharding last**: it's complex (shard keys, resharding, cross-shard queries) and only needed once writes or data size exceed what one well-tuned primary can handle.
+
+</details>
+
+<details>
+<summary><b>Q4. What does 'design for failure' mean in this architecture?</b></summary>
+
+Assume every component will fail: redundancy at every tier, health checks with automatic failover, retries with backoff + idempotency, queues with DLQs, multi-AZ/region deployment, graceful degradation (serve cached or stale data), and **regularly tested** backups and failovers.
+
+</details>
+
+<details>
+<summary><b>Q5. An interviewer says 'design X'. How do these 12 steps help you?</b></summary>
+
+They're the **default skeleton** for almost any design: clients → DNS/CDN → LB → stateless services → cache → database (replicated, possibly sharded) → queues/workers → observability. You start from it, cut what isn't needed, and spend your time on what's unique to X (the data model, a feed algorithm, geo-indexing).
+
+</details>

@@ -30,3 +30,42 @@ Internal apps → Gateway (stateless, autoscaled, multi-AZ)
 
 ## ✅ Takeaways
 Unified API + **token-based** limits and budgets + routing and fallbacks + exact and semantic caching + cost attribution. It's the classic API gateway pattern adapted for LLMs.
+
+## 🧠 Test yourself: 5 interview questions
+
+Answer each one out loud first, then click it to check.
+
+<details>
+<summary><b>Q1. Why build a central LLM gateway at all?</b></summary>
+
+One place for **auth, token-based rate limits and budgets, provider routing and fallbacks, caching, PII redaction, logging, and cost attribution**. Without it, every team re-implements these and the company has no visibility into usage or spend.
+
+</details>
+
+<details>
+<summary><b>Q2. How do you rate limit by tokens when the output length is unknown?</b></summary>
+
+**Reserve** max_tokens (or an estimate) from the token bucket at request time, then **reconcile** with the actual usage after the response finishes and refund the difference. Combine it with a requests-per-minute limit.
+
+</details>
+
+<details>
+<summary><b>Q3. What are the risks of semantic caching, and how do you control them?</b></summary>
+
+It can return an answer to a **subtly different question** (wrong answer) or **leak data between users**. Control it with a conservative similarity threshold, per-tenant or per-user cache scopes, excluding personalized or time-sensitive prompts, and short TTLs.
+
+</details>
+
+<details>
+<summary><b>Q4. How does failover between providers work?</b></summary>
+
+Health checks and a **circuit breaker** per provider and region. On errors, timeouts, or 429s, retry with backoff on an **equivalent model** from another region or provider. Normalize request and response formats through adapters so callers don't notice. Respect data rules (some data may only go to approved providers).
+
+</details>
+
+<details>
+<summary><b>Q5. How do you attribute costs to teams?</b></summary>
+
+Every request carries the team, app, and feature in its key or headers. The gateway records input/output tokens × model price as a **usage event** (to Kafka → a warehouse), drives dashboards and budget alerts, and enforces hard caps.
+
+</details>

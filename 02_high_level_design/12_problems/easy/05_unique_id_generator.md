@@ -51,3 +51,42 @@ class Snowflake:
 
 ## ✅ Takeaways
 Snowflake bit layout + clock-skew handling. These IDs show up in **every** other design (tweets, messages, orders).
+
+## 🧠 Test yourself: 5 interview questions
+
+Answer each one out loud first, then click it to check.
+
+<details>
+<summary><b>Q1. Explain the Snowflake ID layout.</b></summary>
+
+64 bits: **1 sign bit + 41 bits of millisecond timestamp** (since a custom epoch, ~69 years) **+ 10 bits of machine ID** (often 5 datacenter + 5 worker) **+ 12 bits of sequence** (4,096 IDs per ms per machine). IDs are unique without coordination and roughly time-sortable.
+
+</details>
+
+<details>
+<summary><b>Q2. What happens if the system clock moves backwards?</b></summary>
+
+IDs could repeat or go out of order. Detect it (current time < last timestamp) and **refuse to generate** IDs until the clock catches up, or wait/sleep for short skews. For large skews, alert and take the node out of rotation. Use NTP with slewing instead of jumps.
+
+</details>
+
+<details>
+<summary><b>Q3. Why not just use UUIDv4?</b></summary>
+
+It's 128 bits (bigger indexes and keys), **not sortable** by time, and random inserts scatter across B-tree pages (poor locality, slower writes). It's fine when you just need uniqueness. Time-ordered options like UUIDv7/ULID or Snowflake are better for primary keys.
+
+</details>
+
+<details>
+<summary><b>Q4. How are machine IDs assigned?</b></summary>
+
+From **ZooKeeper/etcd** (lease-based registration), deployment configuration, or derived from something unique like a pod ordinal. They must be unique among live generators, or two nodes could emit the same IDs.
+
+</details>
+
+<details>
+<summary><b>Q5. Why are time-sortable IDs useful elsewhere in a design?</b></summary>
+
+They make good **cursor pagination** keys, Cassandra **clustering keys** (time order for free), and help with debugging (you can read the creation time from the ID). They also let you shard and order without a separate timestamp index.
+
+</details>

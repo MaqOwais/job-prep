@@ -42,3 +42,42 @@ Rolling · **Blue/green** (switch traffic between two stacks) · **Canary** (1% 
 - [ ] Explain the saga + compensating action pattern
 - [ ] Circuit breaker states: closed → open → half-open
 - [ ] What problem does the outbox pattern solve?
+
+## 🧠 Test yourself: 5 interview questions
+
+Answer each one out loud first, then click it to check.
+
+<details>
+<summary><b>Q1. Monolith or microservices for a five-engineer startup?</b></summary>
+
+A **modular monolith**: one deployable unit with clear internal module boundaries. It's faster to build, debug, and deploy, and you avoid distributed-systems overhead. Extract a service only when a module needs independent scaling, deployment cadence, or team ownership.
+
+</details>
+
+<details>
+<summary><b>Q2. Explain the saga pattern with an example.</b></summary>
+
+A distributed transaction made of **local transactions**, each with a **compensating action**. Order: reserve inventory → charge payment → create shipment. If payment fails, compensate by releasing the inventory. Sagas are either **choreographed** (services react to events) or **orchestrated** (a coordinator drives the steps).
+
+</details>
+
+<details>
+<summary><b>Q3. What problem does the outbox pattern solve?</b></summary>
+
+The **dual-write problem**: updating the DB and publishing an event are two systems, so one can succeed while the other fails. With an outbox, you write the business row **and** an outbox row in the same DB transaction, and a relay (or CDC) publishes the outbox rows to the broker. Events are never lost or invented.
+
+</details>
+
+<details>
+<summary><b>Q4. How does a circuit breaker work?</b></summary>
+
+**Closed**: calls flow normally while failures are counted. Past a threshold it goes **open**: calls fail fast (or use a fallback) without hitting the sick dependency. After a cooldown it goes **half-open** and lets a few trial calls through. Success closes it; failure reopens it. This prevents cascading failures and thread exhaustion.
+
+</details>
+
+<details>
+<summary><b>Q5. Why should each microservice own its database?</b></summary>
+
+Loose coupling: services can change their schemas, scale, and choose storage technology independently, and one service's heavy queries can't take down another's. Data is shared through **APIs and events**, not shared tables. The cost: no cross-service joins and eventual consistency between services.
+
+</details>

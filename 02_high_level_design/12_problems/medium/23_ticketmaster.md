@@ -38,3 +38,42 @@ Search/browse → Elasticsearch (eventually consistent)
 
 ## ✅ Takeaways
 **Conditional updates / locks with TTL holds** to prevent double booking + a **virtual waiting room** for spikes + a payment saga with release on failure.
+
+## 🧠 Test yourself: 5 interview questions
+
+Answer each one out loud first, then click it to check.
+
+<details>
+<summary><b>Q1. How do you prevent two users from booking the same seat?</b></summary>
+
+An **atomic conditional update**: UPDATE seats SET status='HELD', user=?, hold_until=now()+10min WHERE seat_id=? AND (status='AVAILABLE' OR hold expired). Exactly one request gets rows_affected = 1. Alternatives: SELECT ... FOR UPDATE, or a Redis SET NX lock with a TTL in front of the DB.
+
+</details>
+
+<details>
+<summary><b>Q2. How do seat holds expire?</b></summary>
+
+Store **hold_until** on the seat. Expired holds are treated as available by the conditional update itself (no reliance on timers), and a background sweeper resets them for display. If payment succeeds within the window, the seat becomes BOOKED.
+
+</details>
+
+<details>
+<summary><b>Q3. 10 million users arrive at 10:00 for 50,000 seats. How do you survive?</b></summary>
+
+A **virtual waiting room**: users get a signed queue token and are **admitted in batches** at the rate the booking system can handle. Static pages are served from a CDN, the seat map from a cache, and bots are blocked (CAPTCHA, per-account limits).
+
+</details>
+
+<details>
+<summary><b>Q4. Which parts need strong consistency, and which can be eventual?</b></summary>
+
+**Strong:** seat state and holds, payments, the order record. **Eventual:** event search and browse, the seat map display (refreshed every second or so), recommendations, and notifications.
+
+</details>
+
+<details>
+<summary><b>Q5. What if payment fails after a seat was held?</b></summary>
+
+Run the reservation and payment as a **saga**: on payment failure or timeout, **release the hold** (seat → AVAILABLE) and notify the user. Use idempotency keys on payment so retries don't double-charge.
+
+</details>

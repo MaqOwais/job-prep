@@ -62,4 +62,43 @@ def update_user(user_id, data):
 - [ ] Name 4 decisions you must make when adding a cache
 - [ ] What is a cache stampede, and how do you prevent it?
 
+## 🧠 Test yourself: 5 interview questions
+
+Answer each one out loud first, then click it to check.
+
+<details>
+<summary><b>Q1. Explain the cache-aside pattern, including how writes are handled.</b></summary>
+
+**Read:** check the cache; on a hit, return it. On a miss, read the DB, write the result to the cache with a TTL, and return it. **Write:** update the DB, then **delete** the cache key so the next read reloads fresh data. The app controls the cache, and a cache outage only degrades performance.
+
+</details>
+
+<details>
+<summary><b>Q2. Why delete the cache key on update instead of writing the new value into the cache?</b></summary>
+
+It avoids **race conditions**. Two concurrent updates can write to the DB in one order and to the cache in the other, leaving a stale value cached indefinitely. Deleting is idempotent and simpler: the next reader repopulates the cache from the source of truth.
+
+</details>
+
+<details>
+<summary><b>Q3. What is a cache stampede, and how do you prevent it?</b></summary>
+
+A popular key expires and thousands of requests miss at once and hammer the DB. Prevention: a **lock or single-flight** so only one request rebuilds the value while others wait or get stale data, **jittered TTLs**, **refresh-ahead** for hot keys, and serving stale-while-revalidate.
+
+</details>
+
+<details>
+<summary><b>Q4. How do you choose the TTL and the eviction policy?</b></summary>
+
+TTL reflects **how stale the data can safely be**: seconds for prices or inventory counts, hours for profiles, days for static reference data. Add jitter. **LRU** eviction is the usual default, since recently used data tends to be used again. LFU suits stable popularity patterns.
+
+</details>
+
+<details>
+<summary><b>Q5. What data should NOT be cached?</b></summary>
+
+Data that must be **perfectly fresh and consistent** (account balance during a transaction, seat inventory at the moment of booking), data that's rarely reread (cache pollution), highly personalized one-off results, and sensitive data unless the cache is secured and access-controlled.
+
+</details>
+
 **Next →** [Step 7: CDN](07_cdn.md)

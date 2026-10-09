@@ -744,3 +744,42 @@ You're a strong fit on paper: real SWE experience, hands-on AWS, an AWS AI certi
 3. **16 rehearsed, numbers-backed STAR stories.**
 
 Good luck! 🚀
+
+## 🧠 Test yourself: 5 interview questions
+
+Answer each one out loud first, then click it to check.
+
+<details>
+<summary><b>Q1. A seed-stage startup asks how to host their MVP API on AWS. What do you recommend?</b></summary>
+
+Ask first: team skills, expected traffic, budget and credits, time to market. Then usually **serverless**: API Gateway + Lambda + DynamoDB (or Aurora Serverless if relational), Cognito for auth, S3 + CloudFront for the frontend, IaC with CDK/SAM, CloudWatch alarms, plus **billing alerts** and Activate credits. Simple, nearly free at low traffic, and scales without operations work.
+
+</details>
+
+<details>
+<summary><b>Q2. Explain the shared responsibility model with EC2 and Lambda examples.</b></summary>
+
+AWS secures **the cloud** (facilities, hardware, hypervisor, managed service infrastructure). The customer secures what's **in** it (data, IAM, configuration). With **EC2**, the customer also patches the OS and manages security groups and runtimes. With **Lambda**, AWS handles the OS and runtime, and the customer handles the code, IAM permissions, and data.
+
+</details>
+
+<details>
+<summary><b>Q3. A startup's AWS bill doubled. How would you help?</b></summary>
+
+Look at **Cost Explorer** by service and tag. Common culprits: idle or oversized instances (right-size, Graviton), **NAT Gateway and data transfer**, unattached EBS volumes and old snapshots, dev environments running 24/7. Then: Savings Plans for steady usage, Spot for batch jobs, S3 lifecycle rules, budgets and alerts, and tagging for ownership.
+
+</details>
+
+<details>
+<summary><b>Q4. Security groups vs NACLs?</b></summary>
+
+**Security groups:** instance-level, **stateful** (return traffic allowed automatically), allow rules only. **NACLs:** subnet-level, **stateless** (both directions must be allowed), allow and deny rules, evaluated in numbered order. Most designs rely on security groups, with NACLs as a coarse extra layer.
+
+</details>
+
+<details>
+<summary><b>Q5. A GenAI startup wants a chatbot over its docs. Which AWS architecture would you sketch?</b></summary>
+
+Documents in S3 → **Bedrock Knowledge Bases** (managed chunking, embeddings, vector store) → an orchestration layer (Lambda or ECS) behind API Gateway with Cognito → **Bedrock** model with streaming + **Guardrails** → DynamoDB for chat history → CloudWatch for monitoring. Mention cost levers (prompt caching, model routing) and evaluation.
+
+</details>

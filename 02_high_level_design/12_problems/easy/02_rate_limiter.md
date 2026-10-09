@@ -56,3 +56,42 @@ Client → LB → API Gateway (rate-limit middleware) ──→ Redis cluster (c
 ## ✅ Takeaways
 Token bucket + Redis + Lua for atomicity + 429 responses. Discuss **fail-open** behavior and **edge bursts** in fixed windows.
 Related LLD: implementing this class cleanly is a common coding/LLD question too.
+
+## 🧠 Test yourself: 5 interview questions
+
+Answer each one out loud first, then click it to check.
+
+<details>
+<summary><b>Q1. Compare the token bucket and fixed window algorithms.</b></summary>
+
+**Token bucket:** tokens refill at rate R up to capacity B, and each request spends one. It allows controlled **bursts**, uses O(1) memory per client, and is the industry favorite. **Fixed window:** count requests per clock window. Simple, but allows up to **2× the limit** at window boundaries.
+
+</details>
+
+<details>
+<summary><b>Q2. How do you rate limit across many API servers?</b></summary>
+
+Keep counters in a **shared store (Redis)** and make check-and-update **atomic** with a Lua script or INCR + EXPIRE, so concurrent servers can't both pass the limit. Cache the rules locally. For extreme scale, use local token buckets with periodic synchronization (approximate).
+
+</details>
+
+<details>
+<summary><b>Q3. What should the API return when a client is rate limited?</b></summary>
+
+**HTTP 429 Too Many Requests** with a **Retry-After** header, plus informative headers (X-RateLimit-Limit, -Remaining, -Reset). Clients should back off exponentially with jitter.
+
+</details>
+
+<details>
+<summary><b>Q4. Should the rate limiter fail open or fail closed if Redis is down?</b></summary>
+
+Usually **fail open** (allow traffic), since availability of the product matters more than strict limits, and log or alert. For **security-sensitive** limits (login attempts, OTP verification), **fail closed** or fall back to a strict local limit.
+
+</details>
+
+<details>
+<summary><b>Q5. How do you implement 'exactly k requests per sliding minute' accurately but cheaply?</b></summary>
+
+The **sliding window counter**: keep counts for the current and previous fixed windows and estimate current + previous × (fraction of the previous window still inside the sliding window). Accurate within a few percent with O(1) memory. A sliding **log** is exact but stores every timestamp.
+
+</details>

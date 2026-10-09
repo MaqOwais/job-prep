@@ -79,3 +79,42 @@ def prim(points):
 | [ ] | [Swim in Rising Water](https://leetcode.com/problems/swim-in-rising-water/) | Dijkstra on max elevation |
 | [ ] | [Reconstruct Itinerary](https://leetcode.com/problems/reconstruct-itinerary/) | Hierholzer's (Eulerian path), lexical order |
 | [ ] | [Alien Dictionary](https://neetcode.io/problems/foreign-dictionary) | Build edges from adjacent words → topo sort |
+
+## 🧠 Test yourself: 5 interview questions
+
+Answer each one out loud first, then click it to check.
+
+<details>
+<summary><b>Q1. Why doesn't Dijkstra work with negative edge weights?</b></summary>
+
+Dijkstra **finalizes** a node when it's popped with the smallest distance, assuming no later path can be shorter. A negative edge discovered later could make it shorter, which breaks that assumption. Use Bellman-Ford instead.
+
+</details>
+
+<details>
+<summary><b>Q2. What is Dijkstra's complexity with a binary heap?</b></summary>
+
+**O((V + E) log V)**: each edge may push onto the heap, and each push or pop is O(log V). The "skip if already finalized" check handles stale heap entries.
+
+</details>
+
+<details>
+<summary><b>Q3. Why copy the distance array each round in Cheapest Flights Within K Stops?</b></summary>
+
+Each round should extend paths by **exactly one more edge**. Updating in place lets one round chain several edges, exceeding the stop limit. Reading from the previous round's copy enforces the hop count.
+
+</details>
+
+<details>
+<summary><b>Q4. Prim vs Kruskal for a minimum spanning tree?</b></summary>
+
+**Prim:** grow one tree from a start node with a min-heap of crossing edges. Good for **dense** graphs (or implicit complete graphs like points). **Kruskal:** sort all edges and add each one that doesn't form a cycle (union-find). Good for **sparse** edge lists.
+
+</details>
+
+<details>
+<summary><b>Q5. How do you solve 'minimize the maximum edge along a path' problems?</b></summary>
+
+A **modified Dijkstra** where the path cost is max(current, edge) instead of a sum, or **binary search the threshold** + BFS/union-find to check connectivity using only edges ≤ the threshold. Examples: Swim in Rising Water, Path With Minimum Effort.
+
+</details>

@@ -36,3 +36,42 @@ Trip service (state machine, SQL)  ·  Pricing/Surge service  ·  Payment servic
 
 ## ✅ Takeaways
 In-memory **geo index (geohash/quadtree/H3)**, a location stream that never writes every ping to the DB, **atomic driver locking**, and sharding by city.
+
+## 🧠 Test yourself: 5 interview questions
+
+Answer each one out loud first, then click it to check.
+
+<details>
+<summary><b>Q1. How do you find the nearest available drivers quickly?</b></summary>
+
+Keep drivers' **latest locations in memory** in a geospatial index (Redis GEO, geohash cells, or H3 hexagons), sharded by city or region. A query reads the rider's cell + its neighbors, filters by availability, then ranks by **ETA** from the routing service.
+
+</details>
+
+<details>
+<summary><b>Q2. How do you handle 250K location updates per second?</b></summary>
+
+Drivers send updates over persistent connections to stateless **location services** that overwrite the in-memory index (only the latest position matters) and publish to **Kafka** for history and analytics. No synchronous DB write per ping.
+
+</details>
+
+<details>
+<summary><b>Q3. How do you make sure a driver isn't assigned two trips at once?</b></summary>
+
+**Atomic state transition** on the driver: compare-and-set from AVAILABLE to OFFERED/ASSIGNED (Redis Lua script or a conditional DB update) with an **offer timeout**. Only one matcher can win, and an expired offer returns the driver to AVAILABLE.
+
+</details>
+
+<details>
+<summary><b>Q4. How is surge pricing computed?</b></summary>
+
+A stream processor (Flink) computes **supply vs demand per geo cell** over short windows (open requests vs available drivers) and produces a price multiplier per cell, smoothed to avoid flapping. The pricing service reads it when quoting.
+
+</details>
+
+<details>
+<summary><b>Q5. Why shard by city or region?</b></summary>
+
+Matching is **local**: riders only need nearby drivers. Partitioning by geography keeps queries on one shard, isolates failures, and lets you place services near users. Trips crossing boundaries are handled at the edges.
+
+</details>

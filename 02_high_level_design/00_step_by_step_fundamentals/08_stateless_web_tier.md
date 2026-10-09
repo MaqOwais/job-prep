@@ -55,4 +55,43 @@ Now **any server can handle any request**. Web servers become interchangeable "c
 - [ ] Why are sticky sessions a weak fix?
 - [ ] Session store vs JWT: tradeoffs
 
+## 🧠 Test yourself: 5 interview questions
+
+Answer each one out loud first, then click it to check.
+
+<details>
+<summary><b>Q1. What makes a web server 'stateful', and why is that a problem for scaling?</b></summary>
+
+It keeps client data (sessions, carts, uploaded files) in **local memory or disk**, so a user must keep returning to the same server. That breaks load balancing, autoscaling (removing a server loses sessions), and failover.
+
+</details>
+
+<details>
+<summary><b>Q2. How do you make the web tier stateless?</b></summary>
+
+Move all state to shared stores: **sessions → Redis/DynamoDB** (or self-contained JWTs), **files → object storage (S3)**, persistent data → the database, scheduled work → a central scheduler or queue. Then any server can serve any request.
+
+</details>
+
+<details>
+<summary><b>Q3. Server-side sessions vs JWT: compare them.</b></summary>
+
+**Server-side session**: an opaque ID cookie plus a lookup in a session store. Easy to revoke, small cookie, but every request needs a store lookup. **JWT**: a signed token carrying the claims, verified without any lookup, which makes it stateless and fast. But it's **hard to revoke** before expiry and larger. Use short-lived JWTs with refresh tokens.
+
+</details>
+
+<details>
+<summary><b>Q4. What does a stateless web tier enable operationally?</b></summary>
+
+**Autoscaling** in and out, **zero-downtime deployments** (rolling, blue/green, canary), instant replacement of unhealthy instances, multi-AZ and multi-region serving, and simpler load balancing with no sticky sessions.
+
+</details>
+
+<details>
+<summary><b>Q5. If the web tier is stateless, where does the risk move to?</b></summary>
+
+To the **shared state stores** (session store, database, cache, object storage). They must be highly available (replicated, multi-AZ) and scalable, because every request now depends on them.
+
+</details>
+
 **Next →** [Step 9: Multiple data centers](09_multiple_data_centers.md)

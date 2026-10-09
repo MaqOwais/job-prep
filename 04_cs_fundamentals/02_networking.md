@@ -59,3 +59,42 @@ See [system design: load balancing](../02_high_level_design/03_load_balancing_re
 4. What is a socket? (An endpoint: IP + port + protocol.)
 5. How does traceroute work? (Increasing TTL values + ICMP "time exceeded" replies.)
 6. Why is HTTP stateless, and how do we keep sessions? (Cookies + a server-side session store, or a JWT.)
+
+## 🧠 Test yourself: 5 interview questions
+
+Answer each one out loud first, then click it to check.
+
+<details>
+<summary><b>Q1. TCP vs UDP: give two use cases each.</b></summary>
+
+**TCP:** reliable, ordered, connection-oriented, with flow and congestion control. Use it for web/HTTP APIs and database connections. **UDP:** connectionless, no delivery guarantees, low latency. Use it for video calls, gaming, DNS queries, and QUIC (HTTP/3).
+
+</details>
+
+<details>
+<summary><b>Q2. Explain the TCP three-way handshake and why it's needed.</b></summary>
+
+**SYN** (client proposes an initial sequence number) → **SYN-ACK** (server acknowledges and sends its own) → **ACK**. It synchronizes the sequence numbers on both sides and confirms that both directions work before data flows.
+
+</details>
+
+<details>
+<summary><b>Q3. How does TLS establish a secure connection?</b></summary>
+
+The client sends supported ciphers. The server replies with its **certificate**. The client verifies the certificate chain up to a trusted CA. Both sides run a key exchange (ECDHE) to derive shared **symmetric session keys**, and the rest of the traffic is encrypted with AES-GCM or ChaCha20. TLS 1.3 needs one round trip.
+
+</details>
+
+<details>
+<summary><b>Q4. What is CORS, and why does it exist?</b></summary>
+
+Browsers apply the **same-origin policy**: scripts can't read responses from another origin. **CORS** lets a server opt in by returning Access-Control-Allow-Origin (and handling preflight OPTIONS requests for non-simple requests). It protects users from malicious sites reading their authenticated data on other sites.
+
+</details>
+
+<details>
+<summary><b>Q5. What does a 502 vs 503 vs 504 status code tell you?</b></summary>
+
+**502 Bad Gateway:** the proxy or load balancer got an invalid response from the upstream (crashed app, bad protocol). **503 Service Unavailable:** the server is overloaded or in maintenance (no healthy targets, load shedding). **504 Gateway Timeout:** the upstream didn't respond in time (slow queries, deadlock).
+
+</details>

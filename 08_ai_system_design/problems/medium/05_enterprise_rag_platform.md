@@ -43,3 +43,42 @@ Chat history: DynamoDB/Redis   ·   Semantic cache (embedding similarity) for re
 
 ## ✅ Takeaways
 Async ingestion → hybrid retrieval with **ACL filtering** → re-rank → streamed generation with guardrails → evaluation loop. Talk about **cost and quality**, not just boxes.
+
+## 🧠 Test yourself: 5 interview questions
+
+Answer each one out loud first, then click it to check.
+
+<details>
+<summary><b>Q1. Where must document permissions be enforced, and why?</b></summary>
+
+**At retrieval time**: filter chunks by the user's identity and groups (ACL metadata) before they reach the prompt. If unauthorized text gets into the context, the model can reveal it no matter what the instructions say. Never rely on the LLM to keep secrets.
+
+</details>
+
+<details>
+<summary><b>Q2. Walk through the ingestion pipeline.</b></summary>
+
+Source connectors (S3, Confluence, SharePoint) → change detection → **parse** (PDF/HTML, tables, OCR) → clean → **chunk** (structure-aware) → enrich (titles, contextual headers, ACL and tenant metadata) → **embed** in batches → upsert into the vector index + BM25 index. Deletes and permission changes must propagate too.
+
+</details>
+
+<details>
+<summary><b>Q3. How do you get time-to-first-token under 2 seconds?</b></summary>
+
+Run retrieval steps in parallel, keep the re-ranker small, keep the context lean, use **prompt caching** for the system prompt, choose a fast model (or route), stream tokens over SSE, and colocate services in one region.
+
+</details>
+
+<details>
+<summary><b>Q4. How do you handle follow-up questions like 'what about last year?'</b></summary>
+
+**Query rewriting**: use the chat history to turn the follow-up into a standalone query ("What was the Q3 2025 revenue for product X?") before retrieval. Keep the rewritten query in the trace for debugging.
+
+</details>
+
+<details>
+<summary><b>Q5. How do you know the platform is giving good answers?</b></summary>
+
+Offline evals (recall@k, faithfulness, citation accuracy) on a golden set per domain, an LLM judge plus human spot checks, online thumbs up/down and escalations, and **regression gates** on every prompt, model, or index change.
+
+</details>

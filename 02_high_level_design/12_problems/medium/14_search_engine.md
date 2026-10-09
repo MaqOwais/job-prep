@@ -34,3 +34,42 @@ Querying:  Client → LB → Query service (parse, spell-correct)
 
 ## ✅ Takeaways
 Inverted index, document-partitioned shards, scatter-gather with top-k merging, BM25 + re-ranking, caching hot queries.
+
+## 🧠 Test yourself: 5 interview questions
+
+Answer each one out loud first, then click it to check.
+
+<details>
+<summary><b>Q1. What is an inverted index?</b></summary>
+
+A map from each **term** to a **posting list** of the documents containing it (with term frequency and positions). Built by tokenizing, normalizing, and stemming documents. A query intersects or unions the posting lists to find candidate documents.
+
+</details>
+
+<details>
+<summary><b>Q2. Document-partitioned vs term-partitioned index sharding?</b></summary>
+
+**Document-partitioned:** each shard indexes a subset of documents fully, so queries go to **all shards** (scatter-gather) but indexing is easy and load is balanced. This is the common choice. **Term-partitioned:** each shard owns certain terms, so queries touch fewer shards, but multi-term queries cross shards and popular terms create hotspots.
+
+</details>
+
+<details>
+<summary><b>Q3. What is BM25?</b></summary>
+
+A relevance scoring function improving on TF-IDF: it rewards term frequency with **saturation** (diminishing returns), weights rare terms higher (IDF), and normalizes by **document length**. It's the default lexical ranking in Lucene and Elasticsearch.
+
+</details>
+
+<details>
+<summary><b>Q4. How do you make new documents searchable within minutes?</b></summary>
+
+**Near-real-time indexing**: write new documents into small in-memory segments that are refreshed every second or so, then flush and merge segments in the background (Lucene's design). Feed it from Kafka.
+
+</details>
+
+<details>
+<summary><b>Q5. With 100 shards, one slow shard makes every query slow. What do you do?</b></summary>
+
+Tail-latency techniques: **replicas** per shard with **hedged requests** (send to a second replica if the first is slow), per-shard timeouts that return partial results, load-aware routing, and keeping shards evenly sized.
+
+</details>

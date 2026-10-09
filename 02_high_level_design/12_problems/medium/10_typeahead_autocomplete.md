@@ -32,3 +32,42 @@ Data path (offline):
 
 ## ✅ Takeaways
 Trie with **precomputed top-k per node**, an offline aggregation pipeline, aggressive caching and debouncing, and prefix sharding with skew handling.
+
+## 🧠 Test yourself: 5 interview questions
+
+Answer each one out loud first, then click it to check.
+
+<details>
+<summary><b>Q1. Why store the top-k suggestions at every trie node?</b></summary>
+
+Without it, each keystroke would traverse the **entire subtree** under the prefix to find the most popular completions, which is too slow. Precomputing the top 5 per node makes a lookup **O(prefix length)**. It trades memory and rebuild time for very fast reads.
+
+</details>
+
+<details>
+<summary><b>Q2. How do you update suggestions without slowing down reads?</b></summary>
+
+**Offline aggregation**: search logs → Kafka → batch/stream job computes query frequencies (with time decay) → build a **new trie snapshot** → atomically swap it into the serving nodes (blue/green). Reads never wait on writes.
+
+</details>
+
+<details>
+<summary><b>Q3. How do you meet a sub-100 ms latency target?</b></summary>
+
+Client-side **debounce** (~100–200 ms) and caching, CDN/edge caching of popular prefixes, an **in-memory** trie on servers in regions close to users, and request cancellation for outdated keystrokes.
+
+</details>
+
+<details>
+<summary><b>Q4. How do you shard the trie?</b></summary>
+
+By **prefix** (first one or two characters), with a shard map adjusted for skew (s- and c- prefixes are much bigger than x- or z-). Replicate each shard for read throughput and availability.
+
+</details>
+
+<details>
+<summary><b>Q5. How do you handle trending queries and offensive suggestions?</b></summary>
+
+**Trending:** a real-time stream job (Flink) detects spikes and merges them with the batch top-k. **Offensive or illegal content:** a filter or blocklist layer applied before serving, plus a manual removal tool.
+
+</details>

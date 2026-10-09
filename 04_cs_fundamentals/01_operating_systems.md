@@ -48,3 +48,42 @@ See [Concurrency](04_concurrency.md) for locks and semaphores.
 4. Four deadlock conditions and how to prevent deadlock.
 5. How does a web server handle 10K concurrent connections? (Event loop + epoll, not one thread per connection.)
 6. What does `fork()` return? (0 in the child, the child's PID in the parent; copy-on-write.)
+
+## 🧠 Test yourself: 5 interview questions
+
+Answer each one out loud first, then click it to check.
+
+<details>
+<summary><b>Q1. Process vs thread: what's the difference, and when would you use multiple processes instead of threads?</b></summary>
+
+A process has its **own address space**. Threads share their process's memory but have their own stack and registers. Use processes for **isolation** (one crash doesn't kill the others), security boundaries, and **CPU-bound Python** (bypassing the GIL). Use threads for lightweight concurrency with shared state, and I/O-bound work.
+
+</details>
+
+<details>
+<summary><b>Q2. What happens during a context switch, and why is it expensive?</b></summary>
+
+The OS saves the current thread's registers, program counter, and stack pointer (in its control block), picks the next thread, and restores its state. It's pure overhead, and switching **processes** also changes the address space, which can flush the **TLB** and pollute the CPU caches.
+
+</details>
+
+<details>
+<summary><b>Q3. Explain virtual memory and a page fault.</b></summary>
+
+Each process sees a private **virtual address space**. The MMU translates addresses through **page tables** (cached in the TLB). If a page isn't in RAM, a **page fault** occurs and the OS loads it from disk (swap or file) and updates the table. That enables isolation, overcommitting memory, and memory-mapped files.
+
+</details>
+
+<details>
+<summary><b>Q4. What are the four conditions for deadlock, and how do you prevent it?</b></summary>
+
+**Mutual exclusion, hold and wait, no preemption, circular wait.** Break any one. Most practical: **acquire locks in a consistent global order** (breaks circular wait), use timeouts / try-lock and back off, or acquire all needed locks at once.
+
+</details>
+
+<details>
+<summary><b>Q5. How can one server handle 10,000 concurrent connections?</b></summary>
+
+Not with one thread per connection (memory and context-switch overhead). Use **non-blocking I/O with an event loop** (epoll on Linux, kqueue on macOS) that watches many sockets and processes only the ready ones. That's how NGINX, Node.js, and Python asyncio work. Pair it with a small worker pool for CPU-heavy tasks.
+
+</details>

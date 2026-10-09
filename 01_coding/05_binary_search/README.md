@@ -77,3 +77,42 @@ def search_rotated(a, t):
 |---|---|---|
 | [ ] | [Median of Two Sorted Arrays](https://leetcode.com/problems/median-of-two-sorted-arrays/) | Binary search the partition in the smaller array |
 | [ ] | [Split Array Largest Sum](https://leetcode.com/problems/split-array-largest-sum/) | Binary search the max sum; greedy count of pieces |
+
+## 🧠 Test yourself: 5 interview questions
+
+Answer each one out loud first, then click it to check.
+
+<details>
+<summary><b>Q1. What is binary search on the answer?</b></summary>
+
+When you're asked for the **minimum or maximum value** satisfying a condition, and the condition is **monotonic** over the answer range (if speed k works, any faster speed works), binary search the answer space and check feasibility for each candidate. Examples: Koko Eating Bananas, Ship Packages in D Days, Split Array.
+
+</details>
+
+<details>
+<summary><b>Q2. How do you avoid infinite loops and off-by-one errors in binary search?</b></summary>
+
+Use **one template consistently**. With while lo < hi: if the condition holds, hi = mid (mid may be the answer), else lo = mid + 1, with mid = (lo + hi) // 2. If your update is lo = mid, compute mid with ceiling division instead.
+
+</details>
+
+<details>
+<summary><b>Q3. How does search in a rotated sorted array work?</b></summary>
+
+At any mid, **one half is sorted** (compare a[lo] with a[mid]). If the target lies within the sorted half's range, search there; otherwise search the other half. O(log n).
+
+</details>
+
+<details>
+<summary><b>Q4. bisect_left vs bisect_right?</b></summary>
+
+**bisect_left** returns the first index with a[i] ≥ x (lower bound). **bisect_right** returns the first index with a[i] > x (upper bound). The count of x = bisect_right − bisect_left, and the first/last positions of x come from these.
+
+</details>
+
+<details>
+<summary><b>Q5. What's the idea behind Median of Two Sorted Arrays in O(log(min(m, n)))?</b></summary>
+
+Binary search a **partition** in the smaller array so that the left halves of both arrays together contain half the elements and maxLeft ≤ minRight on both sides. The median comes from the boundary values.
+
+</details>

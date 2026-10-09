@@ -65,3 +65,42 @@ Benchmark and profile (`EXPLAIN`, slow query log) → add the right indexes → 
 - [ ] Pick a shard key for Twitter tweets and explain the hot-key problem
 - [ ] Explain LSM tree vs B-tree in 30 seconds
 - [ ] SQL vs NoSQL for 3 different features of one app
+
+## 🧠 Test yourself: 5 interview questions
+
+Answer each one out loud first, then click it to check.
+
+<details>
+<summary><b>Q1. What are the isolation levels, and which anomaly does each prevent?</b></summary>
+
+**Read uncommitted** → nothing. **Read committed** → dirty reads. **Repeatable read** → non-repeatable reads too. **Serializable** → phantoms too (transactions behave as if run one at a time). Higher isolation means more locking or aborts, so most apps use read committed plus targeted locking.
+
+</details>
+
+<details>
+<summary><b>Q2. Federation vs sharding: what's the difference?</b></summary>
+
+**Federation** (functional partitioning) splits databases **by feature**: users DB, products DB, orders DB. **Sharding** splits **one table's rows** across many DBs by a key. Federation is simpler but limited by the biggest feature. Sharding scales a single huge dataset.
+
+</details>
+
+<details>
+<summary><b>Q3. Why do write-heavy systems often use LSM-tree databases like Cassandra?</b></summary>
+
+LSM trees turn random writes into **sequential appends** (commit log + memtable, flushed to immutable SSTables), so writes are very fast. Reads may check several SSTables, which Bloom filters and compaction mitigate. B-trees update pages in place, which favors reads.
+
+</details>
+
+<details>
+<summary><b>Q4. What is denormalization, and when is it worth it?</b></summary>
+
+Storing **redundant copies** of data (e.g., the author's name inside each post) to avoid joins. It's worth it for read-heavy paths, sharded data where joins cross shards, and precomputed views. The cost: more complex writes, and copies can drift (fix them with async updates or CDC).
+
+</details>
+
+<details>
+<summary><b>Q5. How would you pick a database for a new feature?</b></summary>
+
+Start from **access patterns and requirements**: query shapes (key lookups, ranges, joins, search, graph), read/write ratio, consistency needs, scale, and latency. Then choose: relational for transactions and joins, KV/wide-column for huge simple-access scale, document for flexible schemas, search engine for text, graph for relationships, TSDB for metrics.
+
+</details>

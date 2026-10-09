@@ -79,3 +79,42 @@ Start directly with Subsets (Medium). It's the "hello world" of backtracking.
 |---|---|---|
 | [ ] | [N-Queens](https://leetcode.com/problems/n-queens/) | Sets for cols, `r+c`, `r−c` |
 | [ ] | [Sudoku Solver](https://leetcode.com/problems/sudoku-solver/) | Row/col/box sets; try 1–9 in each empty cell |
+
+## 🧠 Test yourself: 5 interview questions
+
+Answer each one out loud first, then click it to check.
+
+<details>
+<summary><b>Q1. What's the general backtracking template?</b></summary>
+
+choose → explore → un-choose: for each candidate, append it to the path, recurse, then pop it. Record a copy of the path (path[:]) when it's a valid answer. Prune branches that can't lead to a solution.
+
+</details>
+
+<details>
+<summary><b>Q2. How do the Subsets, Combination Sum, and Permutations templates differ?</b></summary>
+
+**Subsets:** a start index, record at every node, recurse with i + 1. **Combination Sum** (reuse allowed): recurse with **i**. **Permutations:** no start index; use a **used[] array** to skip elements already in the path.
+
+</details>
+
+<details>
+<summary><b>Q3. How do you avoid duplicate results when the input has duplicates?</b></summary>
+
+**Sort first**, then skip a candidate if it equals the previous one **at the same recursion level**: if i > start and nums[i] == nums[i−1], continue.
+
+</details>
+
+<details>
+<summary><b>Q4. What are the complexities of generating all subsets and all permutations?</b></summary>
+
+Subsets: **O(n · 2ⁿ)** (2ⁿ subsets, each up to n to copy). Permutations: **O(n · n!)**. That's why constraints are small (n ≤ ~20 for subsets, ~10 for permutations).
+
+</details>
+
+<details>
+<summary><b>Q5. How do you prune N-Queens efficiently?</b></summary>
+
+Track occupied **columns**, **diagonals (r − c)**, and **anti-diagonals (r + c)** in sets. Place one queen per row and skip any column whose column or diagonal is taken. Each check is O(1).
+
+</details>

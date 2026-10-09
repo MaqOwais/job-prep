@@ -60,4 +60,43 @@ What we gained:
 - [ ] What is replication lag, and how do you hide it from the user?
 - [ ] Why doesn't replication help with write-heavy load?
 
+## 🧠 Test yourself: 5 interview questions
+
+Answer each one out loud first, then click it to check.
+
+<details>
+<summary><b>Q1. Explain primary-replica replication and how reads and writes are routed.</b></summary>
+
+All **writes** go to the **primary**, which streams its change log to one or more **replicas**. **Reads** are spread across the replicas (and optionally the primary). This scales reads, keeps copies of the data for durability, and allows failover by promoting a replica.
+
+</details>
+
+<details>
+<summary><b>Q2. What happens when the primary fails?</b></summary>
+
+A failover process (managed service, orchestrator, or consensus) detects the failure, **promotes the most up-to-date replica** to primary, repoints the application (DNS/endpoint update), and adds a replacement replica. With async replication, the last few un-replicated writes can be lost. Guard against **split brain** (two primaries).
+
+</details>
+
+<details>
+<summary><b>Q3. What is replication lag, and how do you prevent users from seeing stale data?</b></summary>
+
+Lag is the delay before a write on the primary appears on replicas (ms to seconds with async replication). Fixes: **read-your-writes** (read from the primary for a few seconds after a user writes, or track their last write position), monotonic reads (pin a user to one replica), or synchronous replication for critical data.
+
+</details>
+
+<details>
+<summary><b>Q4. Synchronous vs asynchronous replication: tradeoffs?</b></summary>
+
+**Synchronous**: the write is acknowledged only after a replica confirms, so no data loss on failover, but writes are slower and stall if the replica is slow. **Asynchronous**: fast writes, but replicas can lag and recent writes can be lost on failover. Common compromise: semi-sync (one replica synchronous, the rest async).
+
+</details>
+
+<details>
+<summary><b>Q5. Your app is write-heavy and the primary is overloaded. Will adding replicas help?</b></summary>
+
+**No.** Replicas only take reads, and every write still goes through one primary (and is then replayed on each replica). For write scaling you need to batch or queue writes, move write-heavy data to a store built for it (Cassandra, DynamoDB), or **shard** the database.
+
+</details>
+
 **Next →** [Step 6: Cache](06_cache.md)

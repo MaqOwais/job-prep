@@ -74,3 +74,42 @@ def merge(a, b):
 |---|---|---|
 | [ ] | [Merge k Sorted Lists](https://leetcode.com/problems/merge-k-sorted-lists/) | Min-heap of `(val, i, node)` |
 | [ ] | [Reverse Nodes in k-Group](https://leetcode.com/problems/reverse-nodes-in-k-group/) | Check that k nodes exist, reverse them, reconnect |
+
+## 🧠 Test yourself: 5 interview questions
+
+Answer each one out loud first, then click it to check.
+
+<details>
+<summary><b>Q1. Why use a dummy (sentinel) head node?</b></summary>
+
+It removes special cases when the **head might change** (deleting the first node, merging lists, inserting at the front). You always have a previous node, and you return dummy.next at the end.
+
+</details>
+
+<details>
+<summary><b>Q2. How does Floyd's cycle detection work, and how do you find the cycle's start?</b></summary>
+
+Slow moves 1 step and fast moves 2. If they meet, there's a cycle. To find the start, reset one pointer to the head and move both 1 step at a time. They meet at the **cycle entrance** (the distance from the head equals the distance from the meeting point, modulo the cycle length).
+
+</details>
+
+<details>
+<summary><b>Q3. How do you remove the Nth node from the end in one pass?</b></summary>
+
+Start from a dummy node and move **fast** n + 1 steps ahead, then move fast and slow together until fast is null. slow.next is the node to remove: set slow.next = slow.next.next.
+
+</details>
+
+<details>
+<summary><b>Q4. Iteratively reverse a linked list. What are the complexities?</b></summary>
+
+Keep prev = None and cur = head. Loop: save nxt = cur.next, set cur.next = prev, then prev = cur and cur = nxt. Return prev. **O(n) time, O(1) space** (the recursive version uses O(n) stack space).
+
+</details>
+
+<details>
+<summary><b>Q5. How do you merge k sorted lists efficiently?</b></summary>
+
+A **min-heap** of the current head of each list, storing (value, index, node) so ties don't compare nodes. Pop the smallest, append it, and push its next node. **O(N log k)** for N total nodes. Divide-and-conquer pairwise merging has the same complexity.
+
+</details>

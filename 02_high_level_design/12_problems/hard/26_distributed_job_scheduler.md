@@ -32,3 +32,42 @@ Status/logs → Executions DB + log storage (S3) → UI/API
 
 ## ✅ Takeaways
 Indexed `next_run_at` + **sharded schedulers with leases** + a **unique (job, time)** dedup constraint + queue + heartbeating workers + idempotent jobs.
+
+## 🧠 Test yourself: 5 interview questions
+
+Answer each one out loud first, then click it to check.
+
+<details>
+<summary><b>Q1. How do schedulers find due jobs efficiently?</b></summary>
+
+An **index on next_run_at** (partitioned into shards), queried with WHERE next_run_at <= now() for owned shards. Alternatives: time-bucketed tables (one row per minute bucket) or Redis sorted sets scored by timestamp (ZRANGEBYSCORE).
+
+</details>
+
+<details>
+<summary><b>Q2. How do you prevent two schedulers from firing the same job?</b></summary>
+
+**Shard ownership via leases** (etcd/ZooKeeper), so each shard has one active scheduler, plus a **unique constraint on (job_id, scheduled_time)** in the executions table, so even a race creates only one execution.
+
+</details>
+
+<details>
+<summary><b>Q3. A worker dies while running a job. What happens?</b></summary>
+
+Workers **heartbeat** while running. If heartbeats stop (or a visibility timeout expires), the execution is marked failed or lost and **re-queued** for another worker, subject to the retry policy. Jobs must be **idempotent** because they can run twice.
+
+</details>
+
+<details>
+<summary><b>Q4. How do you run a DAG of dependent tasks?</b></summary>
+
+Track each task's **pending upstream count** (topological order). When a task succeeds, decrement its children's counts, and enqueue any child that reaches zero. A failure triggers retries, then marks the downstream tasks as skipped or failed according to the policy.
+
+</details>
+
+<details>
+<summary><b>Q5. What if thousands of jobs are scheduled for exactly midnight?</b></summary>
+
+Add **jitter** where the exact time doesn't matter, spread the jobs across shards, pre-scale workers before known peaks, and use priority queues so critical jobs aren't stuck behind bulk ones.
+
+</details>

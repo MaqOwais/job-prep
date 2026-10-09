@@ -70,3 +70,42 @@ class MedianFinder:
 | [ ] | [Find Median from Data Stream](https://leetcode.com/problems/find-median-from-data-stream/) | Two heaps |
 | [ ] | [Merge k Sorted Lists](https://leetcode.com/problems/merge-k-sorted-lists/) | K-way merge |
 | [ ] | [IPO](https://leetcode.com/problems/ipo/) | Sort by capital; max-heap of affordable profits |
+
+## 🧠 Test yourself: 5 interview questions
+
+Answer each one out loud first, then click it to check.
+
+<details>
+<summary><b>Q1. Why use a min-heap of size k to find the k largest elements?</b></summary>
+
+The heap keeps the k largest seen so far, with the **smallest of them at the top**. Each new element either replaces the top or is discarded. That's **O(n log k)** time and O(k) space, better than sorting when k ≪ n, and it works on streams.
+
+</details>
+
+<details>
+<summary><b>Q2. How do you get a max-heap in Python?</b></summary>
+
+heapq is a min-heap only, so push **negated values** (heappush(h, −x)) and negate again when popping. For tuples, negate the priority field.
+
+</details>
+
+<details>
+<summary><b>Q3. Why add a tiebreaker index to heap entries?</b></summary>
+
+If two priorities are equal, Python compares the next tuple element, which could be an **uncomparable object** (a ListNode), raising TypeError. A unique counter or index as the second element avoids that and keeps the order stable.
+
+</details>
+
+<details>
+<summary><b>Q4. Explain the two-heap approach for a running median.</b></summary>
+
+A **max-heap** holds the lower half and a **min-heap** the upper half, kept balanced in size (differing by at most 1). The median is the top of the larger heap, or the average of both tops. Insert is O(log n) and median is O(1).
+
+</details>
+
+<details>
+<summary><b>Q5. Heap vs quickselect for the k-th largest element?</b></summary>
+
+**Heap:** O(n log k), deterministic, works on streams. **Quickselect:** O(n) average, O(n²) worst case (randomize the pivot), works in place on an array you can modify. Mention both and pick based on the constraints.
+
+</details>

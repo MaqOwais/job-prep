@@ -75,3 +75,42 @@ def my_pow(x, n):
 | ✓ | Problem | Hint |
 |---|---|---|
 | [ ] | [Max Points on a Line](https://leetcode.com/problems/max-points-on-a-line/) | For each point, slopes as a reduced (dy, dx) via gcd |
+
+## 🧠 Test yourself: 5 interview questions
+
+Answer each one out loud first, then click it to check.
+
+<details>
+<summary><b>Q1. Why does XOR find the single non-duplicated number?</b></summary>
+
+x ^ x = 0 and x ^ 0 = x, and XOR is commutative and associative. XORing all numbers cancels every pair and leaves the single one. O(n) time, O(1) space.
+
+</details>
+
+<details>
+<summary><b>Q2. What does n & (n − 1) do?</b></summary>
+
+It **clears the lowest set bit**. Uses: count set bits (repeat until 0) and check for a power of two (n > 0 and n & (n − 1) == 0).
+
+</details>
+
+<details>
+<summary><b>Q3. How do you rotate an n×n matrix 90 degrees clockwise in place?</b></summary>
+
+**Transpose** it (swap m[i][j] with m[j][i]), then **reverse each row**. For counter-clockwise, transpose and then reverse each column (or reverse the rows first).
+
+</details>
+
+<details>
+<summary><b>Q4. How does fast exponentiation compute x^n in O(log n)?</b></summary>
+
+Repeated squaring: while n > 0, if n is odd, multiply the result by x. Then square x and halve n. Handle negative n with x = 1/x and n = −n.
+
+</details>
+
+<details>
+<summary><b>Q5. Python integers don't overflow. Why do interviewers still ask about overflow?</b></summary>
+
+Because in **Java/C++** a 32-bit int overflows past 2³¹ − 1. Problems like Reverse Integer require detecting it, and bit problems need 32-bit masks in Python (& 0xFFFFFFFF) to emulate that behavior. Showing awareness of this matters.
+
+</details>

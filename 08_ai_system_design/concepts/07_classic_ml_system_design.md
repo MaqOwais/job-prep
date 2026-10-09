@@ -39,3 +39,42 @@ Many "ML system design" rounds are still about **recommendations, ranking, fraud
 - [ ] Walk through the 9 steps for "design YouTube recommendations"
 - [ ] What is training/serving skew, and how does a feature store prevent it?
 - [ ] Why split data by time?
+
+## 🧠 Test yourself: 5 interview questions
+
+Answer each one out loud first, then click it to check.
+
+<details>
+<summary><b>Q1. Why use a two-stage (candidate generation + ranking) recommender?</b></summary>
+
+Scoring millions of items with a heavy model per request is too slow. **Candidate generation** cheaply narrows millions to ~1,000 with high recall (ANN on embeddings, heuristics). **Ranking** applies an expensive, accurate model to just those. Re-ranking then handles diversity and business rules.
+
+</details>
+
+<details>
+<summary><b>Q2. What is training/serving skew, and how do you prevent it?</b></summary>
+
+A model sees **differently computed features** in production than in training (different code paths, timing, or data), so offline metrics don't hold online. Prevent it with a **feature store** (one feature definition for both), logging the served features for training, and monitoring feature distributions.
+
+</details>
+
+<details>
+<summary><b>Q3. Why split training data by time instead of randomly?</b></summary>
+
+A random split **leaks future information** into training (e.g., later user behavior), inflating offline metrics. A time-based split (train on the past, validate on the future) mimics production, where the model always predicts the future.
+
+</details>
+
+<details>
+<summary><b>Q4. How do you handle a heavily imbalanced dataset like fraud (0.1% positives)?</b></summary>
+
+Use precision/recall, **PR-AUC**, and cost-weighted metrics rather than accuracy. Apply class weights or focal loss, resample (under/oversampling), generate **synthetic minority samples** (SMOTE, or VAE/CTGAN as in my thesis) while validating on real data only, and tune the decision threshold for the business cost tradeoff.
+
+</details>
+
+<details>
+<summary><b>Q5. Offline metrics improved but the A/B test shows no gain. Why might that be?</b></summary>
+
+Offline metrics don't match the **business metric**, training/serving skew, feedback loops or position bias in the logged data, novelty effects, too little statistical power, or the change affects too few users. Check the experiment setup, segment the results, and confirm the served features.
+
+</details>

@@ -60,4 +60,43 @@ Code ──▶ CI (build, test) ──▶ CD (canary → full) ──▶ Servers
 - [ ] Explain a canary deployment with auto-rollback
 - [ ] Why use infrastructure as code with multiple data centers?
 
+## 🧠 Test yourself: 5 interview questions
+
+Answer each one out loud first, then click it to check.
+
+<details>
+<summary><b>Q1. How would you trace a single failing request across ten microservices?</b></summary>
+
+Generate a **correlation/trace ID** at the edge, propagate it in headers through every call, include it in every **structured log** line, and use **distributed tracing** (OpenTelemetry → X-Ray/Jaeger) to see the timing of each hop. Then search the central logs by that ID.
+
+</details>
+
+<details>
+<summary><b>Q2. What are the four golden signals?</b></summary>
+
+**Latency** (including the error path; watch p95/p99), **traffic** (requests per second), **errors** (rate of failed requests), and **saturation** (how full the resources are: CPU, memory, queue depth, connections).
+
+</details>
+
+<details>
+<summary><b>Q3. What should you alert on, and what should you not alert on?</b></summary>
+
+Alert on **user-facing symptoms** tied to SLOs: error rate, latency percentiles, availability, stuck queues. Avoid paging on causes that may not matter (a single CPU spike or one node restarting), because noisy alerts cause alert fatigue. Send those to dashboards or tickets instead.
+
+</details>
+
+<details>
+<summary><b>Q4. Explain a canary deployment with automatic rollback.</b></summary>
+
+Deploy the new version to a **small slice** of servers or traffic (e.g., 1–5%). Compare its error rate and latency to the baseline. If the metrics are healthy, ramp up to 25% → 50% → 100%. If they degrade, **automatically roll back**. This limits the blast radius of a bad release.
+
+</details>
+
+<details>
+<summary><b>Q5. Why use infrastructure as code?</b></summary>
+
+Infrastructure becomes **reproducible, reviewable, and version-controlled**: identical environments and regions, easy disaster recovery (recreate everything from code), no hand-configured "snowflake" servers, and safe changes through pull requests and CI.
+
+</details>
+
 **Next →** [Step 12: Database sharding](12_database_sharding.md)

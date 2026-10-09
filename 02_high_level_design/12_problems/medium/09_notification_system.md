@@ -34,3 +34,42 @@ Services / Scheduler → Notification API (auth, validate, rate limit)
 
 ## ✅ Takeaways
 Separate queue per channel, dedup + retries + DLQ, user preferences and rate limits, provider abstraction with failover.
+
+## 🧠 Test yourself: 5 interview questions
+
+Answer each one out loud first, then click it to check.
+
+<details>
+<summary><b>Q1. Why use a separate queue per channel (push, SMS, email)?</b></summary>
+
+**Isolation (bulkheads):** if the SMS provider is slow or down, its backlog doesn't delay push or email. Each channel also scales its workers independently and has its own retry policy and rate limits.
+
+</details>
+
+<details>
+<summary><b>Q2. How do you avoid sending duplicate notifications?</b></summary>
+
+Give each notification a unique **notification_id** (or an idempotency key from the caller). Workers check a dedup store (Redis SET with a TTL) before sending, because queues deliver at least once.
+
+</details>
+
+<details>
+<summary><b>Q3. What happens when a third-party provider (e.g., Twilio) fails?</b></summary>
+
+Retry with **exponential backoff and jitter**, open a circuit breaker if it keeps failing, **fail over to a secondary provider**, and move permanently failing messages to a DLQ. Track delivery status from provider callbacks.
+
+</details>
+
+<details>
+<summary><b>Q4. How do you respect user preferences and avoid spamming people?</b></summary>
+
+Check per-user **opt-in/opt-out** settings by channel and category, quiet hours with time zones, and **frequency caps** (e.g., max 3 marketing pushes/day). Batch low-priority items into digests. Critical messages (OTP, security alerts) bypass marketing limits.
+
+</details>
+
+<details>
+<summary><b>Q5. How do you prioritize an OTP over a marketing blast?</b></summary>
+
+Separate **priority queues** (or topics) with dedicated worker capacity for high-priority traffic, so a million-message campaign can't delay one-time passwords. Rate-limit marketing sends.
+
+</details>

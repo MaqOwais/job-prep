@@ -41,3 +41,42 @@ Hot standby engine replays the same log → identical state → fast failover
 
 ## ✅ Takeaways
 **Order book (price levels + FIFO + O(1) cancel)**, a **sequencer + event log** for determinism, a single-threaded in-memory matching engine per symbol shard, a hot standby by replay.
+
+## 🧠 Test yourself: 5 interview questions
+
+Answer each one out loud first, then click it to check.
+
+<details>
+<summary><b>Q1. How is the order book structured?</b></summary>
+
+Per symbol: **bids** sorted by price descending and **asks** sorted by price ascending. Each price level holds a **FIFO queue** of orders (time priority). Add a hash map order_id → node so **cancels are O(1)**. Matching takes from the best opposite price level until the order is filled or the price no longer crosses.
+
+</details>
+
+<details>
+<summary><b>Q2. Why is the matching engine often single-threaded?</b></summary>
+
+No locks or contention, which gives **deterministic** and extremely fast (microsecond) processing from in-memory state. Throughput comes from **sharding symbols** across engines rather than threads within one book (the LMAX approach).
+
+</details>
+
+<details>
+<summary><b>Q3. What does the sequencer do?</b></summary>
+
+It assigns a **global, monotonically increasing sequence number** to every inbound event and writes it to a replicated **append-only log** before matching. This defines fairness (time priority), makes processing deterministic, and enables recovery by replay.
+
+</details>
+
+<details>
+<summary><b>Q4. How do you recover after a matching engine crash?</b></summary>
+
+**Event sourcing**: the state = replay of the sequenced input log (from the latest snapshot). A **hot standby** consumes the same log and holds identical state, so failover is nearly instant.
+
+</details>
+
+<details>
+<summary><b>Q5. How do you keep latency in microseconds?</b></summary>
+
+Everything in memory, preallocated ring buffers (Disruptor), no GC pauses (C++/Rust, or object pooling in Java), kernel-bypass networking, CPU pinning, binary protocols, colocation, and keeping all I/O off the matching thread.
+
+</details>

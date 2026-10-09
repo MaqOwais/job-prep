@@ -39,3 +39,42 @@ Meta-monitoring: a separate, simple system watches the monitoring system ("who w
 
 ## ✅ Takeaways
 Agents → **Kafka buffer** → sharded **TSDB with compression and downsampling** → query fan-out; alert state machine with dedup; watch the cardinality.
+
+## 🧠 Test yourself: 5 interview questions
+
+Answer each one out loud first, then click it to check.
+
+<details>
+<summary><b>Q1. Push or pull for metrics collection?</b></summary>
+
+**Pull** (Prometheus): the server scrapes targets, so unhealthy targets are obvious and clients stay simple, but targets must be discoverable and reachable. **Push** (agents → gateway): works for short-lived jobs, serverless, and clients behind NAT. Large systems often use agents that push to a buffered pipeline.
+
+</details>
+
+<details>
+<summary><b>Q2. Why use a specialized time-series database?</b></summary>
+
+Metrics are append-only, time-ordered, and queried by time range and labels. A TSDB uses **delta-of-delta timestamps and XOR value compression** (Gorilla: ~1.4 bytes per point), columnar blocks, label inverted indexes, and retention/downsampling built in.
+
+</details>
+
+<details>
+<summary><b>Q3. What is cardinality, and why is it dangerous?</b></summary>
+
+The number of unique **label combinations** (time series). Adding a label like user_id or request_id creates millions of series, which explodes memory, index size, and query cost. Enforce label limits and use logs or traces for high-cardinality data.
+
+</details>
+
+<details>
+<summary><b>Q4. How do you keep a year of metrics affordable?</b></summary>
+
+**Downsampling and tiered retention**: raw resolution for days, 1-minute rollups for weeks, 1-hour rollups for a year, with older blocks in cheap object storage.
+
+</details>
+
+<details>
+<summary><b>Q5. How do you avoid noisy or flapping alerts?</b></summary>
+
+Use **for: durations** (the condition must hold for 5 minutes), hysteresis thresholds, grouping and deduplication of related alerts, silences during maintenance, routing by severity, and alerts on **SLO symptoms** rather than individual causes.
+
+</details>

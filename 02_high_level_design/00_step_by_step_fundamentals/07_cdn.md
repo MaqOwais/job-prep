@@ -53,4 +53,43 @@ Providers: CloudFront, Cloudflare, Akamai, Fastly. Modern CDNs can also cache so
 - [ ] Pull vs push CDN
 - [ ] How do you update a file that's cached for a year? (Version the filename)
 
+## 🧠 Test yourself: 5 interview questions
+
+Answer each one out loud first, then click it to check.
+
+<details>
+<summary><b>Q1. How does a pull CDN serve a file, from the first request onward?</b></summary>
+
+DNS routes the user to the nearest edge. On the **first request** (miss), the edge fetches the file from the origin (S3 or web server), caches it according to Cache-Control/TTL, and returns it. **Later requests** in that region are served directly from the edge, which is fast and keeps load off the origin.
+
+</details>
+
+<details>
+<summary><b>Q2. Push vs pull CDN: when would you choose each?</b></summary>
+
+**Pull** (the default): low effort, good for high-traffic sites. Content is fetched on demand. **Push**: you upload content proactively. Good for large files or launches where you want content pre-positioned and full control over what's on the edge, but you manage the uploads.
+
+</details>
+
+<details>
+<summary><b>Q3. How do you update a file that's cached on the CDN with a long TTL?</b></summary>
+
+**Version the filename** (content hash, e.g., app.3f9a.js, or ?v=2) so the new file is a new URL and the old cache entries are simply unused. Purging/invalidation also works but is slower, rate-limited, and sometimes costs money. Keep HTML short-lived and assets long-lived.
+
+</details>
+
+<details>
+<summary><b>Q4. What are the main downsides or risks of using a CDN?</b></summary>
+
+**Cost** (data transfer charges), **stale content** if the TTL is too long, more complexity in cache invalidation, and dependence on a third party. Mitigate with a sensible TTL strategy, versioned assets, and an origin fallback if the CDN has problems.
+
+</details>
+
+<details>
+<summary><b>Q5. Can a CDN help with dynamic content and security, not just static files?</b></summary>
+
+Yes. Modern CDNs keep TLS connections warm to the origin, cache short-lived API responses, run **edge compute** (auth checks, redirects, A/B tests), and provide **DDoS protection and a WAF** at the edge. Video streaming relies on CDNs for segments.
+
+</details>
+
 **Next →** [Step 8: Stateless web tier](08_stateless_web_tier.md)

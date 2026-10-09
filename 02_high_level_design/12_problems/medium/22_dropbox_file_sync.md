@@ -36,3 +36,42 @@ Notification service: long-poll / WebSocket → "namespace X changed at cursor N
 
 ## ✅ Takeaways
 **Block-level chunking + content-hash dedup**, metadata DB as the source of truth, a journal/cursor sync protocol, notify-then-pull, conflicted copies.
+
+## 🧠 Test yourself: 5 interview questions
+
+Answer each one out loud first, then click it to check.
+
+<details>
+<summary><b>Q1. Why split files into blocks?</b></summary>
+
+**Delta sync** (re-upload only the changed blocks), **deduplication** (identical blocks are stored once, keyed by hash), **resumable** uploads and downloads, and parallel transfers.
+
+</details>
+
+<details>
+<summary><b>Q2. How does a device learn that something changed?</b></summary>
+
+Each namespace has an append-only **journal** with a cursor. A notification service (long-poll/WebSocket) tells the device "namespace changed". The device then **pulls changes since its cursor** and applies them. The notification is only a hint; the journal is the truth.
+
+</details>
+
+<details>
+<summary><b>Q3. How do you handle two devices editing the same file offline?</b></summary>
+
+The first commit wins as the new version. The second device's commit is detected as a conflict (its base version is stale) and saved as a **"conflicted copy"** file for the user to resolve, rather than merging content automatically.
+
+</details>
+
+<details>
+<summary><b>Q4. Where does metadata live, and why must it be strongly consistent?</b></summary>
+
+In a **relational DB** (sharded by namespace/user): files, versions, block lists, ACLs, the journal. It defines what a file *is*; inconsistent metadata would corrupt or lose files. Blocks are immutable and content-addressed, so they can live in eventually consistent object storage.
+
+</details>
+
+<details>
+<summary><b>Q5. How do you delete blocks safely when files are deleted?</b></summary>
+
+**Reference counting** (or mark-and-sweep) across all file versions that use the block, plus a grace period before physical deletion, because dedup means many files can share a block. Version history retention also keeps blocks alive.
+
+</details>

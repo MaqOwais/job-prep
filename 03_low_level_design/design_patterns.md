@@ -69,3 +69,42 @@ class Subject:                              # Observer
 | Text editor | **Command** (undo/redo), Memento |
 | Payment integration | **Adapter**, Strategy |
 | Logger | Singleton, Chain of responsibility |
+
+## 🧠 Test yourself: 5 interview questions
+
+Answer each one out loud first, then click it to check.
+
+<details>
+<summary><b>Q1. Strategy vs State pattern: they look similar. What's the difference?</b></summary>
+
+Both delegate behavior to interchangeable objects. **Strategy:** the **client chooses** an algorithm (pricing, sorting, routing), and the strategies don't know each other. **State:** the object's behavior changes with its **internal state**, and states typically **trigger transitions** to other states (vending machine: Idle → HasMoney → Dispensing).
+
+</details>
+
+<details>
+<summary><b>Q2. When would you use the Observer pattern? What are its pitfalls?</b></summary>
+
+When many components must react to changes in one subject without tight coupling: UI updates, event buses, notifications, chat delivery. Pitfalls: memory leaks if observers aren't unsubscribed, unexpected update cascades, ordering assumptions, and slow observers blocking the subject (use async dispatch).
+
+</details>
+
+<details>
+<summary><b>Q3. How do you make a Singleton thread-safe, and why is it often discouraged?</b></summary>
+
+Use eager initialization, a module-level instance (Python), or **double-checked locking** for lazy initialization. It's discouraged because it's **global mutable state**: it hides dependencies, makes tests hard (shared state between tests), and complicates concurrency. Prefer dependency injection of a single instance.
+
+</details>
+
+<details>
+<summary><b>Q4. Factory vs Builder: when do you use each?</b></summary>
+
+A **Factory** decides **which concrete class** to instantiate based on input (VehicleFactory.create("car")). A **Builder** constructs **one complex object step by step** with many optional parameters (HttpRequest.builder().url(..).header(..).timeout(..).build()). It avoids huge constructors.
+
+</details>
+
+<details>
+<summary><b>Q5. Which pattern fits undo/redo in a text editor, and how does it work?</b></summary>
+
+**Command**: each edit is an object with execute() and undo(). Executed commands go onto an **undo stack**. Undo pops one, calls undo(), and pushes it onto the **redo stack**. A new command clears the redo stack. Memento can store snapshots for complex state.
+
+</details>

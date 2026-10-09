@@ -102,3 +102,42 @@ class DSU:
 |---|---|---|
 | [ ] | [Word Ladder](https://leetcode.com/problems/word-ladder/) | BFS; neighbors via wildcard patterns `h*t` |
 | [ ] | [Longest Increasing Path in a Matrix](https://leetcode.com/problems/longest-increasing-path-in-a-matrix/) | DFS + memo (a DAG) |
+
+## 🧠 Test yourself: 5 interview questions
+
+Answer each one out loud first, then click it to check.
+
+<details>
+<summary><b>Q1. BFS vs DFS: which finds shortest paths, and why?</b></summary>
+
+**BFS**, in **unweighted** graphs: it explores in order of distance (level by level), so the first time it reaches a node is via a shortest path. DFS gives no such guarantee. For weighted graphs, use Dijkstra.
+
+</details>
+
+<details>
+<summary><b>Q2. Why mark nodes visited when enqueuing rather than when dequeuing in BFS?</b></summary>
+
+Otherwise the same node can be **enqueued many times** by different neighbors before it's processed, wasting time and memory (and it can break distance counting).
+
+</details>
+
+<details>
+<summary><b>Q3. How does Kahn's algorithm detect a cycle?</b></summary>
+
+Repeatedly remove nodes with in-degree 0 and decrement their neighbors. If the number of processed nodes is **less than n** at the end, some nodes never reached in-degree 0, which means there's a **cycle**.
+
+</details>
+
+<details>
+<summary><b>Q4. What do path compression and union by size do in union-find?</b></summary>
+
+**Path compression** makes nodes on a find path point closer to (or directly at) the root. **Union by size/rank** attaches the smaller tree under the larger. Together, operations are nearly O(1) amortized (inverse Ackermann).
+
+</details>
+
+<details>
+<summary><b>Q5. What is multi-source BFS? Give an example.</b></summary>
+
+Start the BFS with **all sources in the queue at distance 0**, so the distances spread outward from every source at once. Rotting Oranges (all rotten oranges spread together) and 01 Matrix (distance to the nearest 0) are classic examples.
+
+</details>

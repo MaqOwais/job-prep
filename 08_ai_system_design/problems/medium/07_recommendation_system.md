@@ -34,3 +34,42 @@ ONLINE: real-time features (last N items viewed) via streaming (Kafka/Flink) →
 
 ## ✅ Takeaways
 **Candidate generation → ranking → re-ranking**, two-tower + ANN, a feature store, cold-start strategies, and A/B tests on business metrics.
+
+## 🧠 Test yourself: 5 interview questions
+
+Answer each one out loud first, then click it to check.
+
+<details>
+<summary><b>Q1. Explain the two-tower model and how it's served.</b></summary>
+
+A **user tower** and an **item tower** each output an embedding, trained so their dot product predicts engagement. Item embeddings are **precomputed and indexed for ANN search**. At request time the user embedding is computed and the nearest items are retrieved as candidates.
+
+</details>
+
+<details>
+<summary><b>Q2. How do you handle new users and new items (cold start)?</b></summary>
+
+**New users:** popularity, onboarding questions, context (location, device, time), then quick adaptation from their first interactions. **New items:** content-based embeddings (text and image features) and **exploration** traffic (bandits) to gather engagement data.
+
+</details>
+
+<details>
+<summary><b>Q3. Why optimize for watch time or purchases rather than clicks?</b></summary>
+
+Clicks are easy to game (clickbait) and don't capture real value. Optimizing for **downstream satisfaction** (watch time, completion, purchases, retention) aligns the model with user and business value. Usually several objectives are combined into one ranking score.
+
+</details>
+
+<details>
+<summary><b>Q4. How do you stop the model from only recommending already popular items?</b></summary>
+
+Add **exploration** (ε-greedy or bandits), diversity re-ranking, popularity debiasing, inverse-propensity weighting in training, and fairness or creator-exposure constraints. Without them, a feedback loop keeps amplifying popularity.
+
+</details>
+
+<details>
+<summary><b>Q5. How do real-time signals get into recommendations?</b></summary>
+
+Stream user events (Kafka → Flink) into an **online feature store** (Redis/DynamoDB) with features like "last 10 items viewed". The ranking model reads them at request time, so recommendations react within seconds of a click.
+
+</details>

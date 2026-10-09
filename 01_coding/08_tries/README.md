@@ -66,3 +66,42 @@ def search_wild(node, word, i=0):
 | ✓ | Problem | Hint |
 |---|---|---|
 | [ ] | [Word Search II](https://leetcode.com/problems/word-search-ii/) | Trie of words + grid DFS; remove found words |
+
+## 🧠 Test yourself: 5 interview questions
+
+Answer each one out loud first, then click it to check.
+
+<details>
+<summary><b>Q1. When is a trie better than a hash set of words?</b></summary>
+
+When you need **prefix** operations: starts-with checks, autocomplete, listing all words with a prefix, or pruning a search (Word Search II) as soon as a prefix doesn't exist. A hash set only answers whole-word membership.
+
+</details>
+
+<details>
+<summary><b>Q2. What are the complexities of trie insert and search?</b></summary>
+
+**O(L)** time for a word of length L, independent of the number of words stored. Space is O(total characters) in the worst case. Using dicts for children saves space versus fixed 26-element arrays.
+
+</details>
+
+<details>
+<summary><b>Q3. Why does each node need an end-of-word flag?</b></summary>
+
+To distinguish a stored word from a mere prefix: after inserting "apple", the path for "app" exists, but "app" wasn't inserted unless that node is marked as an end.
+
+</details>
+
+<details>
+<summary><b>Q4. How do you implement wildcard search like 'b.d'?</b></summary>
+
+DFS: for a normal character, follow that child. For '.', **try every child** recursively. Return true if any branch reaches the end of the pattern at an end-of-word node. The worst case branches widely, but the trie prunes dead prefixes.
+
+</details>
+
+<details>
+<summary><b>Q5. Why does Word Search II use a trie instead of searching each word separately?</b></summary>
+
+Searching each word separately repeats the grid DFS once per word. With a trie of all the words, **one DFS per cell** explores every word at once and stops as soon as the current path isn't a prefix of any word. Removing found words keeps it fast.
+
+</details>

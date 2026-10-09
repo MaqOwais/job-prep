@@ -30,3 +30,42 @@ Client → LB → Search API → User Graph service
 
 ## ✅ Takeaways
 Bidirectional BFS + sharded adjacency lists + **batching lookups per shard** + caching the friend lists of hot users.
+
+## 🧠 Test yourself: 5 interview questions
+
+Answer each one out loud first, then click it to check.
+
+<details>
+<summary><b>Q1. Why bidirectional BFS?</b></summary>
+
+Searching from both users toward each other explores about **b^(d/2) + b^(d/2)** nodes instead of **b^d** (b = average friends, d = distance). With b = 100 and d = 4, that's ~20K vs ~100M nodes.
+
+</details>
+
+<details>
+<summary><b>Q2. The graph doesn't fit on one machine. How do you run BFS?</b></summary>
+
+Shard adjacency lists by user ID across person servers. A lookup service maps users to servers. The BFS coordinator expands the frontier in **batches**, grouping user IDs by shard so it makes one RPC per shard per level, and tracks visited nodes and parents itself.
+
+</details>
+
+<details>
+<summary><b>Q3. How can you reduce cross-shard calls?</b></summary>
+
+**Locality-aware partitioning**: place friends together (by geography, school, or community detection), so most edges stay inside a shard. Also cache the friend lists of popular users and precompute 2-hop neighborhoods.
+
+</details>
+
+<details>
+<summary><b>Q4. How would you compute 'people you may know'?</b></summary>
+
+Count **mutual friends** (friends-of-friends who aren't already friends) and combine it with signals like shared groups, contacts, and location. Precompute offline (batch graph jobs), rank with an ML model, and serve from a cache.
+
+</details>
+
+<details>
+<summary><b>Q5. What about users with millions of connections?</b></summary>
+
+Treat **supernodes** specially: skip or sample them during BFS (they connect almost everyone, so they add little information), store their edges separately, and cache aggressively.
+
+</details>

@@ -87,3 +87,42 @@ def kth_smallest(root, k):
 |---|---|---|
 | [ ] | [Binary Tree Maximum Path Sum](https://leetcode.com/problems/binary-tree-maximum-path-sum/) | Return max single-branch gain (≥ 0); global = node + l + r |
 | [ ] | [Serialize and Deserialize Binary Tree](https://leetcode.com/problems/serialize-and-deserialize-binary-tree/) | Pre-order with "N" for null |
+
+## 🧠 Test yourself: 5 interview questions
+
+Answer each one out loud first, then click it to check.
+
+<details>
+<summary><b>Q1. DFS vs BFS on trees: when would you use each?</b></summary>
+
+**DFS** (recursion) when the answer combines results from subtrees: height, diameter, path sums, validation, LCA. **BFS** (queue, level by level) for level order, right side view, minimum depth, or anything per level.
+
+</details>
+
+<details>
+<summary><b>Q2. Why is checking only the immediate children wrong when validating a BST?</b></summary>
+
+Every node in the left subtree must be less than the node, not just its direct child. A grandchild can violate the ancestor's bound. Pass **(low, high) bounds** down the recursion, or check that the in-order traversal is strictly increasing.
+
+</details>
+
+<details>
+<summary><b>Q3. How do you find the lowest common ancestor in a binary tree?</b></summary>
+
+Recursive: if the node is null, p, or q, return it. Recurse left and right. If **both** sides return non-null, this node is the LCA. Otherwise return whichever side is non-null. O(n). In a BST, walk down from the root to the split point.
+
+</details>
+
+<details>
+<summary><b>Q4. Explain the 'return one thing, record another' pattern (e.g., diameter, max path sum).</b></summary>
+
+The recursive function **returns what the parent needs** (the height, or the best single-branch gain), and updates a **global answer** for paths through the current node (left + right). These differ because a path through a node can't continue upward through both branches.
+
+</details>
+
+<details>
+<summary><b>Q5. What are the complexities of tree recursion?</b></summary>
+
+Time **O(n)** (each node visited once). Space **O(h)** for the recursion stack: O(log n) for a balanced tree, **O(n) for a skewed tree** (watch Python's recursion limit and offer an iterative version).
+
+</details>

@@ -37,3 +37,42 @@ Monthly reset: new key per month (leaderboard:YYYY-MM); old keys expire or are a
 
 ## ✅ Takeaways
 **Redis sorted sets** (ZINCRBY, ZREVRANGE, ZREVRANK), DB/Kafka as the source of truth, server-side scoring, and sharding by score range for huge scale.
+
+## 🧠 Test yourself: 5 interview questions
+
+Answer each one out loud first, then click it to check.
+
+<details>
+<summary><b>Q1. Which Redis commands implement a leaderboard?</b></summary>
+
+**ZINCRBY key points member** (update a score), **ZREVRANGE key 0 9 WITHSCORES** (top 10), **ZREVRANK key member** (a player's rank), **ZSCORE** (a player's score). All O(log n) because a sorted set is a skip list + hash map.
+
+</details>
+
+<details>
+<summary><b>Q2. How do you prevent cheating?</b></summary>
+
+Never accept scores from the client. **Game servers compute and submit scores** over authenticated server-to-server calls. Add validation (maximum plausible score per game, rate checks), anomaly detection, and an audit log of score events.
+
+</details>
+
+<details>
+<summary><b>Q3. How do you break ties so the earlier achiever ranks higher?</b></summary>
+
+Encode the time into the score: score = points × 10^10 + (MAX_TS − achieved_at). Higher points always win, and for equal points the earlier timestamp gives a larger value. Decode the points by integer division.
+
+</details>
+
+<details>
+<summary><b>Q4. What if 500 million users don't fit on one Redis node?</b></summary>
+
+Shard by **score range** (the top shard holds the top players; your rank = rank within your shard + the counts of all higher shards), or shard by user hash and **scatter-gather** the top-K from each shard. Exact global ranks for everyone are expensive, so show approximate percentiles for most users.
+
+</details>
+
+<details>
+<summary><b>Q5. How do you make the leaderboard durable?</b></summary>
+
+Redis is the fast serving layer, not the source of truth. Persist score events to a **database or Kafka**. Enable Redis AOF and replicas, and be able to **rebuild** the sorted set by replaying events after a failure.
+
+</details>

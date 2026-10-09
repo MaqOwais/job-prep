@@ -40,3 +40,42 @@ More moving parts, eventual consistency, harder debugging (use correlation IDs),
 - [ ] Why does at-least-once delivery require idempotent consumers?
 - [ ] How do you keep a single user's events in order?
 - [ ] What is back pressure and how do you apply it?
+
+## 🧠 Test yourself: 5 interview questions
+
+Answer each one out loud first, then click it to check.
+
+<details>
+<summary><b>Q1. At-most-once, at-least-once, exactly-once: how is each achieved?</b></summary>
+
+**At-most-once:** acknowledge or commit before processing (may lose messages). **At-least-once:** process, then acknowledge (may duplicate); this is the default. **Exactly-once effect:** at-least-once delivery + **idempotent consumers** (dedupe keys), or transactional processing like Kafka transactions for read-process-write.
+
+</details>
+
+<details>
+<summary><b>Q2. How do you guarantee ordering for one user's events?</b></summary>
+
+Use the user ID as the **partition key** (Kafka) or **message group ID** (SQS FIFO). All of that user's events go to one partition, which is consumed in order by one consumer. Global ordering across all events doesn't scale and is rarely needed.
+
+</details>
+
+<details>
+<summary><b>Q3. What is a dead-letter queue, and how should you use it?</b></summary>
+
+A queue that receives messages that **failed N times** (poison messages), so they don't block or loop forever. Alert on DLQ growth, inspect and fix the cause, then **redrive** the messages back to the main queue.
+
+</details>
+
+<details>
+<summary><b>Q4. What is back pressure?</b></summary>
+
+Signaling producers to slow down when consumers can't keep up: bounded queues, rejecting with 429/503 + Retry-After, rate limiting upstream, or pausing consumption. Without it, queues grow without bound and latency or memory explodes.
+
+</details>
+
+<details>
+<summary><b>Q5. When should you NOT make something asynchronous?</b></summary>
+
+When the user needs the result **immediately** to continue (login, payment authorization, reads), the operation is cheap and fast, or the added complexity (eventual consistency, duplicate handling, monitoring) outweighs the benefit.
+
+</details>

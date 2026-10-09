@@ -34,3 +34,42 @@ End user / app → API (authN: OAuth/OIDC) → Session router (session_id → sa
 
 ## ✅ Takeaways
 **Per-session microVM isolation**, a tool gateway with **delegated identity**, a memory service, sandboxes, full tracing, and policy limits. This is how agents become production systems.
+
+## 🧠 Test yourself: 5 interview questions
+
+Answer each one out loud first, then click it to check.
+
+<details>
+<summary><b>Q1. Why run each agent session in its own microVM?</b></summary>
+
+Agents execute **untrusted, model-generated code** and tool actions. Containers share the host kernel, so an escape could reach other tenants. **MicroVMs** (e.g., Firecracker) give hardware-level isolation per session with fast startup, plus restricted network egress and state wiped at session end.
+
+</details>
+
+<details>
+<summary><b>Q2. How should an agent call third-party APIs on behalf of a user?</b></summary>
+
+Through a **tool gateway** with **delegated identity**: the user grants OAuth consent once, tokens are kept in a vault, and the gateway injects a **scoped token** per call. The agent code never holds raw credentials, and every call is audited as "agent X on behalf of user Y".
+
+</details>
+
+<details>
+<summary><b>Q3. How do you handle sessions that run for hours?</b></summary>
+
+**Durable session state** and checkpoints, heartbeats, idle timeouts, resume after failure, and asynchronous patterns (the user gets notified when the task completes). Bill compute per second, and enforce maximum durations and budgets.
+
+</details>
+
+<details>
+<summary><b>Q4. How do you design long-term memory for agents?</b></summary>
+
+Store raw session events, then **asynchronously extract durable facts and preferences** (LLM summarization) into a per-user namespace (vector + KV). Retrieve the relevant memories at session start. Users and admins can view, correct, and delete them.
+
+</details>
+
+<details>
+<summary><b>Q5. How do you safely release a new version of an agent?</b></summary>
+
+Run **regression evals** on recorded traces and test suites, deploy as a **canary** to a small share of traffic, compare task success, cost, and safety metrics with the current version, roll out gradually, and keep instant rollback. Version prompts, tools, and models together.
+
+</details>

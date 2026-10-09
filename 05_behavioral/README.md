@@ -51,3 +51,42 @@ Adjust the last line for each company.
 - [Amazon Leadership Principles](https://www.amazon.jobs/content/en/our-workplace/leadership-principles)
 - [Tech Interview Handbook: behavioral](https://www.techinterviewhandbook.org/behavioral-interview/)
 - Record yourself answering on your phone. You'll hear the filler words and the "we"s.
+
+## 🧠 Test yourself: 5 interview questions
+
+Answer each one out loud first, then click it to check.
+
+<details>
+<summary><b>Q1. How long should a STAR answer be, and how should it be balanced?</b></summary>
+
+About **2–3 minutes**. Keep the Situation and Task short (~25%), spend most of the time on **Actions** (~50–60%, what *you* did and why), and end with **Results with numbers** and a short learning.
+
+</details>
+
+<details>
+<summary><b>Q2. How do you answer 'Tell me about a time you failed'?</b></summary>
+
+Pick a **real, meaningful** failure (not a disguised strength), own your part without blaming others, explain what you did to recover, give the outcome, and spend real time on **what you learned and changed afterwards**, ideally with evidence it worked later.
+
+</details>
+
+<details>
+<summary><b>Q3. How do you answer a conflict or disagreement question well?</b></summary>
+
+Show you disagreed **respectfully and with data**, listened to the other side, sought common ground or escalated appropriately, and then **committed** to the decision (even if you didn't win). End with the result and your relationship with that person afterwards.
+
+</details>
+
+<details>
+<summary><b>Q4. What if you don't have a perfect example for a question?</b></summary>
+
+Take a few seconds to think. Use the closest real example from work, research, projects, or open source, and say what the situation was. Never invent a story: follow-up questions will expose it, and honesty is evaluated too.
+
+</details>
+
+<details>
+<summary><b>Q5. Why should you say 'I' instead of 'we'?</b></summary>
+
+Interviewers assess **your** contribution and decisions. "We" hides what you did. Credit the team briefly, then be specific: "I designed the caching layer, I convinced the team to…, I measured…".
+
+</details>

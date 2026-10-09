@@ -42,3 +42,42 @@ Service discovery (ZooKeeper) assigns clients to the least-loaded chat server
 ## ✅ Takeaways
 WebSockets + a **session registry** + persist-then-deliver + ACKs with client dedup IDs + Cassandra partitioned by conversation.
 LLD version: [online_chat.py](../../../03_low_level_design/problems/online_chat.py).
+
+## 🧠 Test yourself: 5 interview questions
+
+Answer each one out loud first, then click it to check.
+
+<details>
+<summary><b>Q1. How does a message get delivered from user A to user B?</b></summary>
+
+A sends over a **WebSocket** to its chat server → the server **persists** the message (Cassandra) → looks up B's connection in the **session registry** (Redis: user → server) → forwards it to B's chat server → which pushes it over B's WebSocket. If B is offline, send a push notification; B syncs when it reconnects.
+
+</details>
+
+<details>
+<summary><b>Q2. How do you guarantee message ordering?</b></summary>
+
+Within a conversation, assign **monotonically increasing message IDs** on the server (Snowflake or a per-conversation sequence) and order by ID on the client. Don't trust client clocks. Ordering across different conversations isn't needed.
+
+</details>
+
+<details>
+<summary><b>Q3. How do you make sure messages aren't lost or duplicated?</b></summary>
+
+The client attaches a **client-generated message ID**. The server persists before acknowledging ("sent"), and the client retries until it gets the ack (**at-least-once**). The server **dedupes** by the client message ID. Delivery and read receipts are separate acks.
+
+</details>
+
+<details>
+<summary><b>Q4. How is online presence implemented?</b></summary>
+
+Clients send a **heartbeat** every ~30 s. Presence is stored in Redis with a TTL, so a missed heartbeat means offline. Publish presence changes only to the user's contacts who are online, and throttle updates to avoid storms.
+
+</details>
+
+<details>
+<summary><b>Q5. Why Cassandra for messages instead of Postgres?</b></summary>
+
+The workload is **write-heavy and enormous**, and reads are almost always "latest N messages of conversation X". Cassandra's partition key (conversation_id) + clustering key (message_id) fits that pattern, with linear write scalability and multi-datacenter replication.
+
+</details>

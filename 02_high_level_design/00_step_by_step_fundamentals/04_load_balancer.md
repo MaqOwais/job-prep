@@ -64,4 +64,43 @@ What we gained:
 - [ ] L4 vs L7, with one use case each
 - [ ] How do you stop the LB itself from being a single point of failure?
 
+## 🧠 Test yourself: 5 interview questions
+
+Answer each one out loud first, then click it to check.
+
+<details>
+<summary><b>Q1. What problems does a load balancer solve?</b></summary>
+
+1. **Distributes traffic** across many servers. 2. **Failover**: health checks remove dead servers automatically. 3. **Scalability**: add or remove servers without clients noticing. Bonus: SSL termination, a single public entry point (servers stay on private IPs), and connection draining during deploys.
+
+</details>
+
+<details>
+<summary><b>Q2. Layer 4 vs layer 7 load balancing: what's the difference?</b></summary>
+
+**L4** routes by IP and port (TCP/UDP) without looking at content: very fast, and supports static IPs (AWS NLB). **L7** understands HTTP: it can route by path, host, headers, or cookies, and can do auth, redirects, and rewrites (AWS ALB, NGINX). Use L7 for web apps and microservices, and L4 for raw TCP, extreme throughput, or non-HTTP protocols.
+
+</details>
+
+<details>
+<summary><b>Q3. How do you stop the load balancer from becoming a single point of failure?</b></summary>
+
+Run LBs redundantly: an **active-passive pair** with a floating IP and heartbeats, or **active-active** with DNS spreading traffic across them. Managed cloud LBs are already distributed across availability zones. For global setups, add DNS-level failover across regions.
+
+</details>
+
+<details>
+<summary><b>Q4. Round robin vs least connections: when would you use each?</b></summary>
+
+**Round robin** works when servers are identical and requests are short and similar. **Least connections** is better when request durations vary a lot (uploads, long polling, WebSockets), because it sends new work to the server with the fewest active requests.
+
+</details>
+
+<details>
+<summary><b>Q5. What are sticky sessions, and why should you usually avoid them?</b></summary>
+
+The LB pins a user to one server (by cookie or IP hash) because that server holds their session in memory. Problems: **uneven load**, sessions are **lost when that server dies** or is scaled in, and deployments get harder. Better: make servers stateless and keep sessions in Redis or a database.
+
+</details>
+
 **Next →** [Step 5: Database replication](05_database_replication.md)

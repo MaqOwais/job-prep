@@ -33,3 +33,42 @@ Feedback (👍/👎, CSAT) + transcripts → eval pipeline
 
 ## ✅ Takeaways
 Router → RAG for knowledge + **scoped tools** for actions → human handoff. Memory via summaries. Measure deflection *and* quality.
+
+## 🧠 Test yourself: 5 interview questions
+
+Answer each one out loud first, then click it to check.
+
+<details>
+<summary><b>Q1. How do you stop the bot from inventing refund policies?</b></summary>
+
+Answer only from **retrieved policy documents** (RAG) with citations, instruct it to refuse or escalate when the context doesn't cover the question, add a groundedness check on the output, and let business rules (not the LLM) decide refunds above a threshold.
+
+</details>
+
+<details>
+<summary><b>Q2. How do you prevent one customer from seeing another customer's orders?</b></summary>
+
+The order-lookup tool takes the customer ID **from the authenticated session**, never from model-generated arguments. The tool enforces authorization server-side, so even a prompt-injected request can only see the logged-in user's data.
+
+</details>
+
+<details>
+<summary><b>Q3. When and how should the bot hand off to a human?</b></summary>
+
+Trigger on low confidence, repeated failures, negative sentiment, sensitive topics, or an explicit request. Pass the agent a **summary**, the detected intent, the customer's details, and the steps already tried, so the customer doesn't have to repeat everything.
+
+</details>
+
+<details>
+<summary><b>Q4. How do you keep long conversations within the context window?</b></summary>
+
+Keep the last N turns verbatim plus a **rolling summary** of earlier turns, store key facts (order number, issue) in structured session state, and retrieve only the knowledge relevant to the current question.
+
+</details>
+
+<details>
+<summary><b>Q5. Which metrics define success?</b></summary>
+
+**Deflection/resolution rate** without a human, CSAT, escalation precision (escalated when it should be), policy accuracy on a golden test set, average handle time, and cost per conversation.
+
+</details>

@@ -43,3 +43,42 @@ Likes/comments → Like service → Redis counters + Kafka → async persist; no
 
 ## ✅ Takeaways
 **Pre-signed direct uploads + async media pipeline + CDN**, hybrid fan-out feed with ranking, Redis counters for likes, sharding by user_id.
+
+## 🧠 Test yourself: 5 interview questions
+
+Answer each one out loud first, then click it to check.
+
+<details>
+<summary><b>Q1. How should photo uploads work?</b></summary>
+
+The client asks the API for a **pre-signed URL** and uploads **directly to S3** (multipart for large files), so the bytes never pass through app servers. An S3 event triggers async workers to resize, transcode, strip EXIF, and moderate. Then the post is published and fanned out.
+
+</details>
+
+<details>
+<summary><b>Q2. How are images served fast worldwide?</b></summary>
+
+From a **CDN**, with multiple pre-generated sizes and modern formats (WebP/AVIF), immutable versioned URLs with long TTLs, and lazy loading in the client.
+
+</details>
+
+<details>
+<summary><b>Q3. How do you handle a post getting a million likes in an hour?</b></summary>
+
+Don't update one DB row per like. Use **Redis INCR or sharded counters**, batch flush to the DB, record like edges asynchronously via Kafka, and show approximate counts.
+
+</details>
+
+<details>
+<summary><b>Q4. How is the home feed generated?</b></summary>
+
+A **hybrid fan-out** like Twitter: push post IDs to followers' feed caches for normal accounts, pull for celebrities at read time. Then **rank** the candidates with an ML model (engagement prediction) rather than sorting by time.
+
+</details>
+
+<details>
+<summary><b>Q5. How would you shard the posts data?</b></summary>
+
+By **user_id** (Instagram's famous approach on Postgres with logical shards), so a user's posts live together and the profile grid query hits one shard. IDs embed the shard and time (Snowflake-like), so they're sortable and routable.
+
+</details>

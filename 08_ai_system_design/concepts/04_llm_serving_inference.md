@@ -49,3 +49,42 @@
 - [ ] What limits concurrency on a GPU? (The KV cache.)
 - [ ] What would you autoscale on, and why not CPU?
 - [ ] When would you self-host instead of using an API?
+
+## 🧠 Test yourself: 5 interview questions
+
+Answer each one out loud first, then click it to check.
+
+<details>
+<summary><b>Q1. What is continuous batching?</b></summary>
+
+Instead of waiting for a whole batch to finish, the server **adds new requests and removes finished ones at every decode step**. The GPU stays full even though requests have very different lengths, which multiplies throughput compared to static batching.
+
+</details>
+
+<details>
+<summary><b>Q2. What problem does PagedAttention (vLLM) solve?</b></summary>
+
+**KV cache memory fragmentation.** Reserving contiguous memory for each request's maximum length wastes most of the GPU memory. PagedAttention stores the KV cache in **fixed-size pages** (like OS virtual memory), allocated on demand and shareable between requests with a common prefix. More concurrent requests fit, giving much higher throughput.
+
+</details>
+
+<details>
+<summary><b>Q3. Why not autoscale LLM servers on CPU utilization?</b></summary>
+
+CPU usage barely reflects GPU load. Scale on **queue depth / pending requests**, **KV-cache utilization**, GPU utilization, and **TTFT** against the SLO. GPU instances also take minutes to load model weights, so keep warm capacity and scale predictively.
+
+</details>
+
+<details>
+<summary><b>Q4. How does speculative decoding speed up generation without changing the output?</b></summary>
+
+A small, fast **draft model** proposes several tokens. The big model **verifies them in one forward pass** and accepts the longest correct prefix (rejection sampling keeps the output distribution identical). When most drafts are accepted, you get 2–3× faster decoding.
+
+</details>
+
+<details>
+<summary><b>Q5. When should a company self-host open-weight models instead of using an API?</b></summary>
+
+When volume is **high and steady** (GPU cost per token beats API pricing), data must stay inside its own network for compliance, it needs deep customization (fine-tunes, custom decoding), or it wants to avoid vendor limits. Otherwise an API is cheaper in engineering time and gives the latest models.
+
+</details>

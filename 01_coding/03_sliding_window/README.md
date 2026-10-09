@@ -66,3 +66,42 @@ def max_sum_k(nums, k):
 | [ ] | [Minimum Window Substring](https://leetcode.com/problems/minimum-window-substring/) | Need-count + a "formed" counter; shrink while valid |
 | [ ] | [Sliding Window Maximum](https://leetcode.com/problems/sliding-window-maximum/) | Monotonic decreasing **deque** of indices |
 | [ ] | [Subarrays with K Different Integers](https://leetcode.com/problems/subarrays-with-k-different-integers/) | atMost(k) − atMost(k−1) |
+
+## 🧠 Test yourself: 5 interview questions
+
+Answer each one out loud first, then click it to check.
+
+<details>
+<summary><b>Q1. What problem signals tell you to use a sliding window?</b></summary>
+
+A **contiguous** subarray or substring, plus "longest/shortest/maximum/count … such that a condition holds", where the condition changes **monotonically** as the window grows or shrinks (counts, sums of non-negative numbers, distinct characters).
+
+</details>
+
+<details>
+<summary><b>Q2. Why is a sliding window O(n) despite the nested while loop?</b></summary>
+
+Each element is **added once** (right pointer) and **removed at most once** (left pointer), so the total pointer movement is at most 2n.
+
+</details>
+
+<details>
+<summary><b>Q3. Where do you record the answer for 'longest' vs 'shortest' windows?</b></summary>
+
+**Longest valid:** shrink while the window is invalid, then record after shrinking. **Shortest valid:** while the window is valid, record, then shrink to try for something smaller (record inside the shrink loop).
+
+</details>
+
+<details>
+<summary><b>Q4. How do you count subarrays with exactly K distinct values?</b></summary>
+
+exactly(K) = **atMost(K) − atMost(K − 1)**. Each atMost uses a standard sliding window that adds r − l + 1 (the number of valid subarrays ending at r) per step.
+
+</details>
+
+<details>
+<summary><b>Q5. How does Sliding Window Maximum achieve O(n)?</b></summary>
+
+A **monotonic decreasing deque** of indices: pop smaller values from the back before pushing (they can never be the max), and pop the front when it leaves the window. The front is always the current window's max, and each index is pushed and popped once.
+
+</details>

@@ -57,4 +57,43 @@ User ──▶ ? ─────┼─▶ [ server 2 ]
 - [ ] What 2 things does horizontal scaling require?
 - [ ] Why are databases harder to scale horizontally than web servers?
 
+## 🧠 Test yourself: 5 interview questions
+
+Answer each one out loud first, then click it to check.
+
+<details>
+<summary><b>Q1. Compare vertical and horizontal scaling.</b></summary>
+
+**Vertical** = a bigger machine: simple, no code changes, but there's a hardware ceiling, it's still a SPOF, and cost grows steeply. **Horizontal** = more machines: practically no ceiling, redundancy, autoscaling, but it needs a load balancer and stateless services, and it's more complex to operate.
+
+</details>
+
+<details>
+<summary><b>Q2. Why is it easier to scale web servers horizontally than databases?</b></summary>
+
+Web servers can be **stateless**: any server can handle any request, so you just add copies. Databases **own state**. Copies must stay in sync (replication), and splitting data across machines (sharding) breaks joins and transactions and needs rebalancing.
+
+</details>
+
+<details>
+<summary><b>Q3. A startup's single server is at 90% CPU. What do you do first, and why?</b></summary>
+
+Measure first (profile: is it CPU in the app, slow queries, or memory?). Quick wins: fix hot queries and add indexes, then **scale vertically** for immediate relief. In parallel, make the app stateless and put it behind a load balancer so it can scale horizontally. Vertical buys time; horizontal is the long-term answer.
+
+</details>
+
+<details>
+<summary><b>Q4. What is autoscaling, and what metrics would you scale on?</b></summary>
+
+Automatically adding or removing instances based on load. Typical signals: **CPU utilization**, request count per target, **latency**, and **queue depth** for workers. Use target tracking (e.g., keep CPU at 60%), scheduled scaling for known peaks, and cooldowns to avoid flapping.
+
+</details>
+
+<details>
+<summary><b>Q5. Is vertical scaling ever the right long-term answer?</b></summary>
+
+Yes, often for **databases**. Modern machines are huge (hundreds of cores, TBs of RAM), and a vertically scaled primary with read replicas can serve very large products for years. That's simpler than sharding. It's also fine for workloads that are hard to distribute, like some in-memory analytics.
+
+</details>
+
 **Next →** [Step 4: Load balancer](04_load_balancer.md)

@@ -55,4 +55,43 @@ A solid, stateless, cached, replicated system, but **all in one data center**.
 - [ ] Why is cross-region replication usually asynchronous, and what's the risk?
 - [ ] AZ vs region
 
+## 🧠 Test yourself: 5 interview questions
+
+Answer each one out loud first, then click it to check.
+
+<details>
+<summary><b>Q1. How are users routed to the right data center, and how does failover work?</b></summary>
+
+**GeoDNS / latency-based DNS** (or a global anycast load balancer) returns the IP of the nearest healthy data center. Health checks detect a failed DC, and DNS stops returning it, so traffic shifts to the remaining DCs. Short DNS TTLs speed up failover.
+
+</details>
+
+<details>
+<summary><b>Q2. Active-passive vs active-active across regions?</b></summary>
+
+**Active-passive**: one region serves traffic and the other is a standby that takes over on failure. Simpler, minutes of downtime, idle capacity. **Active-active**: all regions serve traffic, giving lower latency and instant failover, but writes in multiple regions create **conflicts** and need careful data design (home regions, CRDTs, last-write-wins).
+
+</details>
+
+<details>
+<summary><b>Q3. Why is cross-region database replication usually asynchronous?</b></summary>
+
+Synchronous writes would wait for a cross-continent round trip (~100+ ms) on **every write**, and stall if the link degrades. Async keeps writes fast. The tradeoff is a small **RPO** (seconds of writes lost if a region fails) and eventual consistency between regions.
+
+</details>
+
+<details>
+<summary><b>Q4. What's the difference between an availability zone and a region?</b></summary>
+
+An **AZ** is one or more isolated data centers with independent power and networking. AZs in the same region are a few ms apart. A **region** is a geographic area containing multiple AZs. Multi-AZ protects against data center failures (the HA standard). Multi-region protects against regional disasters and serves global users.
+
+</details>
+
+<details>
+<summary><b>Q5. What are the hardest operational challenges of running multiple data centers?</b></summary>
+
+**Data synchronization and consistency**, keeping configs and deployments identical (infrastructure as code, automated multi-region deploys), **testing failover regularly** (otherwise it fails when needed), data residency rules, and roughly doubling infrastructure cost.
+
+</details>
+
 **Next →** [Step 10: Message queue](10_message_queue.md)

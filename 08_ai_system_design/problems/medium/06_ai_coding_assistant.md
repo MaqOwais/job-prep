@@ -34,3 +34,42 @@ Telemetry: shown / accepted / edited-after-accept → metrics + training data (o
 
 ## ✅ Takeaways
 Latency-first design: debounce + cancel + FIM + smart context packing + a small fast model + prefix caching. Measure acceptance rate.
+
+## 🧠 Test yourself: 5 interview questions
+
+Answer each one out loud first, then click it to check.
+
+<details>
+<summary><b>Q1. Why is latency so critical for inline code completion, and how do you achieve it?</b></summary>
+
+Suggestions must appear **while the developer pauses** (roughly < 300–500 ms) or they get in the way. Use client debounce and request cancellation, a **small specialized model**, prefix caching (consecutive prompts share most tokens), regional GPUs, HTTP/2 connection reuse, and short outputs.
+
+</details>
+
+<details>
+<summary><b>Q2. What is fill-in-the-middle (FIM)?</b></summary>
+
+The model is trained to generate the code between a **prefix** (code before the cursor) and a **suffix** (code after it), so completions fit the surrounding code (closing brackets, matching the function that follows) instead of only continuing from the left.
+
+</details>
+
+<details>
+<summary><b>Q3. How do you choose which context goes into the prompt?</b></summary>
+
+Rank candidate snippets by relevance and fit them into a token budget: the code around the cursor, open tabs and recently edited files, imports and definitions of symbols used nearby, and embedding-similar code from the repo. Context selection is often the biggest quality lever.
+
+</details>
+
+<details>
+<summary><b>Q4. How do you measure whether the assistant helps?</b></summary>
+
+**Acceptance rate**, **retention** (accepted code still present after N seconds or minutes), latency percentiles, the share of code written with assistance, and controlled productivity studies. Offline: pass@k on test-based benchmarks.
+
+</details>
+
+<details>
+<summary><b>Q5. What privacy concerns do enterprises have, and how do you address them?</b></summary>
+
+Proprietary code leaving the company or being used for training. Offer **zero data retention**, no training on customer code, encryption, regional or VPC deployment options, secret-detection filters on prompts and outputs, and admin controls and audit logs.
+
+</details>

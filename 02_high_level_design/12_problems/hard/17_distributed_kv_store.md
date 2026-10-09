@@ -37,3 +37,42 @@ Node internals: commit log (durability) → memtable (memory) → flush → SSTa
 
 ## ✅ Takeaways
 Name all 8 building blocks and the problem each solves. Explain quorum math with N=3. This is the Dynamo paper in one page.
+
+## 🧠 Test yourself: 5 interview questions
+
+Answer each one out loud first, then click it to check.
+
+<details>
+<summary><b>Q1. Explain quorum reads and writes with N=3.</b></summary>
+
+Each key is replicated to **N = 3** nodes. A write succeeds after **W** acks and a read queries **R** replicas. If **W + R > N** (e.g., W=2, R=2), read and write sets overlap in at least one node, so reads see the latest acknowledged write. W=1/R=1 is faster but weaker.
+
+</details>
+
+<details>
+<summary><b>Q2. What are vector clocks for?</b></summary>
+
+Detecting whether two versions of a value are **causally ordered or concurrent**. Each version carries (node, counter) pairs. If neither clock dominates the other, the versions **conflict** and must be merged (by the app, as with Dynamo's cart) instead of one silently overwriting the other.
+
+</details>
+
+<details>
+<summary><b>Q3. What are sloppy quorum and hinted handoff?</b></summary>
+
+If a replica is down, the write goes to the **next healthy node** on the ring (sloppy quorum), which stores a **hint**. When the original node recovers, the hint is handed back. This keeps writes available during failures.
+
+</details>
+
+<details>
+<summary><b>Q4. How do replicas that drifted apart get repaired?</b></summary>
+
+**Read repair** (fix stale replicas noticed during reads) and **anti-entropy** using **Merkle trees**: replicas compare tree hashes per key range and sync only the ranges that differ. Efficient even for huge datasets.
+
+</details>
+
+<details>
+<summary><b>Q5. Describe the write and read path on a single node.</b></summary>
+
+**Write:** append to the commit log (durability) → insert into the memtable → acknowledge. Memtables flush to immutable **SSTables**, and compaction merges them. **Read:** memtable → SSTables newest first, skipping files via **Bloom filters**, then merge versions. Deletes are tombstones.
+
+</details>

@@ -91,3 +91,42 @@ class Singleton:                       # double-checked locking
 4. How would you make a cache thread-safe? (A lock, a read-write lock, or a concurrent map + atomic operations.)
 5. Threads vs processes vs asyncio in Python: when would you use each?
 6. How do you avoid deadlock with multiple locks? (A global lock ordering.)
+
+## 🧠 Test yourself: 5 interview questions
+
+Answer each one out loud first, then click it to check.
+
+<details>
+<summary><b>Q1. What is a race condition? Give an example and a fix.</b></summary>
+
+The result depends on the timing of concurrent operations on shared state. Example: two threads run count += 1 (read → add → write), and one update is lost. Fix: a **lock/mutex** around the critical section, an **atomic** operation (AtomicInteger, Redis INCR), or avoid shared mutable state (message passing).
+
+</details>
+
+<details>
+<summary><b>Q2. Mutex vs semaphore?</b></summary>
+
+A **mutex** lets **one** holder into a critical section and is owned by the thread that locked it. A **semaphore** is a counter that allows up to **N** concurrent holders (e.g., limit 10 DB connections). A binary semaphore resembles a mutex but has no ownership semantics.
+
+</details>
+
+<details>
+<summary><b>Q3. Why should you call wait() inside a while loop instead of an if?</b></summary>
+
+**Spurious wakeups** can happen, and another thread may consume the condition between the notify and your thread re-acquiring the lock. Re-checking the condition in a while loop guarantees it's actually true before you proceed.
+
+</details>
+
+<details>
+<summary><b>Q4. Threads vs processes vs asyncio in Python: when would you use each?</b></summary>
+
+**asyncio:** many I/O-bound tasks (thousands of sockets) on one thread with cooperative scheduling. **Threads:** I/O-bound work with blocking libraries (the GIL is released during I/O). **Processes (multiprocessing):** **CPU-bound** work, which gets true parallelism across cores because each process has its own GIL.
+
+</details>
+
+<details>
+<summary><b>Q5. How would you implement a bounded blocking queue?</b></summary>
+
+A buffer + a lock + two **condition variables** (not_full, not_empty). put() waits while full, appends, and notifies not_empty. get() waits while empty, pops, and notifies not_full. Always wait in a while loop. Python's queue.Queue(maxsize) already does this.
+
+</details>

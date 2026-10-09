@@ -29,3 +29,42 @@ Decisions + reviewer labels → training data → retrain classifiers (data flyw
 
 ## ✅ Takeaways
 **Classifier cascade** with confidence thresholds, LLMs only for ambiguous cases, a human-in-the-loop queue, and a labeling flywheel.
+
+## 🧠 Test yourself: 5 interview questions
+
+Answer each one out loud first, then click it to check.
+
+<details>
+<summary><b>Q1. Why a cascade instead of running an LLM on every post?</b></summary>
+
+**Cost and latency.** Most content is clearly fine or clearly bad. Cheap hash matching and small classifiers handle the bulk in milliseconds, and only uncertain items go to the expensive LLM or multimodal model, then to humans. This cuts cost by orders of magnitude.
+
+</details>
+
+<details>
+<summary><b>Q2. How do you set thresholds per category?</b></summary>
+
+By **harm severity and the cost of errors**: severe harms (child safety, self-harm) use low thresholds (high recall) and route to humans. Spam uses higher thresholds (high precision) to avoid annoying users. Tune on labeled data and adjust with appeal outcomes.
+
+</details>
+
+<details>
+<summary><b>Q3. How do adversarial users evade moderation, and how do you respond?</b></summary>
+
+Misspellings and leetspeak, text embedded in images, coded language, and slight image edits. Respond with **OCR** + multimodal models, perceptual hashing, normalization, frequent retraining on new examples, and red-teaming.
+
+</details>
+
+<details>
+<summary><b>Q4. How do human reviewers fit in?</b></summary>
+
+They handle uncertain and high-severity cases from **priority queues**, and their decisions become **training labels** (the data flywheel). Support them with well-being tooling (blurred previews, limited exposure) and track agreement between reviewers for quality.
+
+</details>
+
+<details>
+<summary><b>Q5. Which metrics matter for moderation?</b></summary>
+
+**Precision and recall per category**, the **prevalence** of harmful content actually seen by users, time to action, appeal overturn rate (false positives), and review queue latency.
+
+</details>

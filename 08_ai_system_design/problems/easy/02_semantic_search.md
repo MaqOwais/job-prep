@@ -28,3 +28,42 @@ QUERY:    Client → API → query embedding (cached for popular queries)
 
 ## ✅ Takeaways
 Embeddings + ANN (HNSW) + BM25 hybrid + re-ranking, with filtered search, index versioning, and nDCG/CTR evaluation.
+
+## 🧠 Test yourself: 5 interview questions
+
+Answer each one out loud first, then click it to check.
+
+<details>
+<summary><b>Q1. Why does pure vector search miss queries like 'error E-4012'?</b></summary>
+
+Embedding models compress meaning and often don't preserve **exact rare tokens** (codes, SKUs, names). Keyword search (BM25) matches them exactly, which is why hybrid search is the standard.
+
+</details>
+
+<details>
+<summary><b>Q2. Pre-filtering vs post-filtering with metadata filters?</b></summary>
+
+**Post-filtering** (ANN first, then filter) can return too few results if the filter is selective. **Pre-filtering** (restrict candidates first) is accurate but can be slow with naive ANN. Prefer vector DBs that support **filtered HNSW** search natively.
+
+</details>
+
+<details>
+<summary><b>Q3. How do you roll out a new embedding model?</b></summary>
+
+Embeddings from different models aren't compatible, so **re-embed the whole corpus into a new index version**, evaluate it offline (nDCG/recall), A/B test it, then switch traffic over (blue/green) and delete the old index.
+
+</details>
+
+<details>
+<summary><b>Q4. How much memory do 10M vectors of 768 dimensions need?</b></summary>
+
+10M × 768 × 4 bytes (float32) ≈ **30 GB**, plus the HNSW graph overhead (often 1.5–2×). Quantization (float16/int8/PQ) reduces it 2–8×. Shard it across nodes if needed.
+
+</details>
+
+<details>
+<summary><b>Q5. How do you measure search quality?</b></summary>
+
+Offline: **nDCG@10, recall@k, MRR** on labeled query-result pairs. Online: click-through rate, add-to-cart or conversion rate, **zero-result rate**, query reformulation rate, and time to click.
+
+</details>

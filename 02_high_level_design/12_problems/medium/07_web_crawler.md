@@ -48,3 +48,42 @@ Seed URLs → URL Frontier (priority + politeness queues)
 
 ## ✅ Takeaways
 Frontier with **per-host politeness queues**, **Bloom filter dedup**, trap handling, and partitioning by hostname.
+
+## 🧠 Test yourself: 5 interview questions
+
+Answer each one out loud first, then click it to check.
+
+<details>
+<summary><b>Q1. How does the crawler stay polite to websites?</b></summary>
+
+Respect **robots.txt** (cached per host), and keep **per-host queues** with a minimum delay between requests to the same host (tracked in a heap of next-allowed fetch times). Identify the crawler in its User-Agent, and back off on 429/5xx responses.
+
+</details>
+
+<details>
+<summary><b>Q2. How do you avoid crawling the same URL twice?</b></summary>
+
+**Normalize** URLs (lowercase host, remove fragments, sort query params, resolve relative paths), then check a **Bloom filter** (memory-efficient, no false negatives) backed by a persistent seen-URL store. Detect duplicate **content** with checksums or SimHash.
+
+</details>
+
+<details>
+<summary><b>Q3. What are crawler traps, and how do you avoid them?</b></summary>
+
+Infinite URL spaces such as calendars that go on forever, session IDs in URLs, and endlessly deep links. Defenses: maximum depth, maximum URL length, per-domain page budgets, pattern blacklists, and detecting near-duplicate content.
+
+</details>
+
+<details>
+<summary><b>Q4. How do you distribute the crawl across many machines?</b></summary>
+
+Partition the URL frontier by **hash(hostname)**, so each host is owned by one worker. That keeps politeness and robots.txt logic local and avoids cross-node coordination. Workers share a seen-URL store and DNS cache.
+
+</details>
+
+<details>
+<summary><b>Q5. How do you decide what to recrawl, and how often?</b></summary>
+
+Prioritize by **importance** (PageRank, traffic) and **change frequency** learned from history: news homepages every few minutes, static pages monthly. Use HTTP conditional requests (ETag / If-Modified-Since) to cut the cost of unchanged pages.
+
+</details>

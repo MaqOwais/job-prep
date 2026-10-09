@@ -49,3 +49,42 @@ L7 Application (HTTP, DNS, gRPC) · L4 Transport (TCP/UDP) · L3 Network (IP) ·
 - [ ] REST vs gRPC vs GraphQL: when would you use each?
 - [ ] WebSockets vs SSE vs long polling
 - [ ] Why is cursor pagination better than offset?
+
+## 🧠 Test yourself: 5 interview questions
+
+Answer each one out loud first, then click it to check.
+
+<details>
+<summary><b>Q1. REST vs gRPC vs GraphQL: when would you use each?</b></summary>
+
+**REST:** public APIs, simple CRUD over HTTP, cacheable, universal. **gRPC:** internal service-to-service calls, low latency, binary Protobuf, streaming, typed generated clients. **GraphQL:** many client types needing different data shapes, avoiding over- and under-fetching (watch for N+1 queries and harder caching).
+
+</details>
+
+<details>
+<summary><b>Q2. WebSockets vs Server-Sent Events vs long polling?</b></summary>
+
+**WebSockets:** full-duplex persistent connection, for chat, games, and collaborative editing. **SSE:** server → client one-way stream over HTTP, auto-reconnects, for notifications, live feeds, and LLM token streaming. **Long polling:** the request is held until there's data. A fallback when neither is available; higher overhead.
+
+</details>
+
+<details>
+<summary><b>Q3. Which HTTP methods are idempotent, and why does it matter?</b></summary>
+
+**GET, PUT, DELETE, HEAD, OPTIONS** are idempotent: repeating them has the same effect. **POST** isn't (and PATCH may not be). This matters for **retries**: clients and proxies can safely retry idempotent calls. For POSTs that create payments or orders, use an **Idempotency-Key** header.
+
+</details>
+
+<details>
+<summary><b>Q4. Why is cursor-based pagination better than offset-based?</b></summary>
+
+OFFSET 1,000,000 makes the DB scan and skip a million rows (slow), and inserts or deletes during paging cause skipped or duplicated items. A **cursor** (e.g., the last seen ID or timestamp) uses an index seek (WHERE id < cursor LIMIT 20), so it's fast and stable.
+
+</details>
+
+<details>
+<summary><b>Q5. What did HTTP/2 and HTTP/3 improve?</b></summary>
+
+**HTTP/2:** binary framing, **multiplexing** many requests over one TCP connection, header compression (HPACK). **HTTP/3:** runs over **QUIC (UDP)**, which removes TCP head-of-line blocking, gives faster handshakes (0/1-RTT), and keeps connections alive across network changes (Wi-Fi to cellular).
+
+</details>

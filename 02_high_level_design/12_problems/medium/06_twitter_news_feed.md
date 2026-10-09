@@ -58,3 +58,42 @@ Celebrity fan-out → hybrid. Hot tweets → cache replication. Redis memory →
 ## ✅ Takeaways
 **Push vs pull vs hybrid fan-out** is what this interview is about. Store IDs in timelines and hydrate from caches.
 Related coding problem: [Design Twitter (LeetCode 355)](https://leetcode.com/problems/design-twitter/).
+
+## 🧠 Test yourself: 5 interview questions
+
+Answer each one out loud first, then click it to check.
+
+<details>
+<summary><b>Q1. Fan-out on write vs fan-out on read?</b></summary>
+
+**On write (push):** when someone tweets, insert the tweet ID into every follower's timeline cache. Reads are fast; writes are expensive for accounts with huge followings. **On read (pull):** build the timeline at read time by merging the recent tweets of everyone you follow. Cheap writes, slow reads. Twitter-scale systems use a **hybrid**.
+
+</details>
+
+<details>
+<summary><b>Q2. How do you handle celebrities with 100M followers?</b></summary>
+
+Don't fan out their tweets. At read time, **merge the celebrity tweets** (fetched from their user timelines, heavily cached) into the user's precomputed timeline. Also skip fan-out to inactive users.
+
+</details>
+
+<details>
+<summary><b>Q3. What exactly is stored in the timeline cache?</b></summary>
+
+Only **tweet IDs** (and maybe author IDs) in a Redis list per user, capped at ~800 entries. On read, the IDs are **hydrated** via multi-get from the tweet and user caches. Storing IDs keeps memory small and avoids updating copies when a tweet is edited or deleted.
+
+</details>
+
+<details>
+<summary><b>Q4. How would you design tweet search?</b></summary>
+
+Stream new tweets (via Kafka) into an **inverted index** (Elasticsearch / custom Earlybird-style), sharded by time or document, with replicas. Queries **scatter-gather** across shards, merge the top-k, and rank by relevance + recency + engagement.
+
+</details>
+
+<details>
+<summary><b>Q5. How do you store and display like counts at scale?</b></summary>
+
+Increment counters in **Redis** (or sharded counters) and flush them to the DB in batches; record the like edge (user, tweet) for "did I like this". Show approximate counts; exact real-time accuracy isn't required.
+
+</details>

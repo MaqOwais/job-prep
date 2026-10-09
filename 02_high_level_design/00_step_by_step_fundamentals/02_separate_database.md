@@ -62,4 +62,46 @@ Now each tier can be sized, tuned, and scaled **independently**. In the cloud, t
 - [ ] Name the 4 NoSQL families with one use case each
 - [ ] Give 2 reasons to choose SQL and 2 reasons to choose NoSQL
 
+## 🧠 Test yourself: 5 interview questions
+
+Answer each one out loud first, then click it to check.
+
+<details>
+<summary><b>Q1. Why separate the web tier and the data tier?</b></summary>
+
+They have **different resource profiles** (app = CPU, DB = memory and disk I/O) and **different scaling strategies** (web servers scale horizontally easily; databases don't). Separating them lets you size, tune, secure, and scale each one independently, and use a managed DB with automated backups.
+
+</details>
+
+<details>
+<summary><b>Q2. You're starting a new product. SQL or NoSQL? Justify your answer.</b></summary>
+
+**Default to SQL** (e.g., Postgres): the data is usually relational, transactions matter, the schema can evolve with migrations, and it handles a lot of scale with indexes and replicas. Pick NoSQL for a **specific access pattern** that needs it: massive write throughput, simple key lookups at huge scale, flexible documents, or graph traversal.
+
+</details>
+
+<details>
+<summary><b>Q3. Name the four NoSQL families and give one use case for each.</b></summary>
+
+- **Key-value** (Redis, DynamoDB): sessions, carts, feature flags.
+- **Document** (MongoDB): product catalog with varied attributes, CMS content.
+- **Wide-column** (Cassandra, HBase): chat messages, time series, activity logs (write-heavy).
+- **Graph** (Neo4j, Neptune): social graphs, fraud rings, recommendations.
+
+</details>
+
+<details>
+<summary><b>Q4. What does ACID mean, and why does it matter for a payments feature?</b></summary>
+
+**Atomicity** (all or nothing), **Consistency** (constraints always hold), **Isolation** (concurrent transactions don't see each other's partial work), **Durability** (once committed, it survives crashes). For payments, a debit and its matching credit must both happen or neither does, and two concurrent withdrawals must not overdraw the account.
+
+</details>
+
+<details>
+<summary><b>Q5. What new problem does a separate DB server introduce, and how do you mitigate it?</b></summary>
+
+A **network hop** for every query (~0.5 ms in the same data center), plus a second machine that can fail. Mitigate the latency by avoiding chatty access (N+1 queries): batch queries, use joins, use connection pooling. The availability risk is addressed later with replication and failover.
+
+</details>
+
 **Next →** [Step 3: Vertical vs horizontal scaling](03_vertical_vs_horizontal_scaling.md)
