@@ -5,6 +5,7 @@ One folder per company or role. Each one adds what's unique on top of the shared
 | Company / role | Plan | Status |
 |---|---|---|
 | AWS: Associate Startup Solutions Architect | [aws_startup_sa/](aws_startup_sa/AWS_Associate_Startup_SA_Prep_Plan.md) | In progress |
+| Amazon: SDE Online Assessment (coding + AI repo task, work simulation, work style) | [amazon_sde_oa/](amazon_sde_oa/README.md) | In progress |
 
 ## Template for a new company
 Create `06_company_specific/<company_role>/README.md` with:

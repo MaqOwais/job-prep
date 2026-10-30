@@ -9,6 +9,7 @@ Many SWE loops include rapid-fire questions on OS, networking, databases, concur
 | 3 | [Databases & SQL](03_databases_sql.md) | ACID, isolation levels, indexes, joins, normalization, **SQL query practice** |
 | 4 | [Concurrency](04_concurrency.md) | Race conditions, locks, semaphores, producer-consumer, Python GIL, async |
 | 5 | [OOP](05_oop.md) | 4 pillars, composition vs inheritance, interfaces, SOLID |
+| 6 | [Django + DRF](06_django.md) | Request lifecycle, ORM/N+1, transactions & race conditions, middleware, DRF auth/permissions, scaling, zero-downtime migrations |
 
 Also see: [System design concepts](../02_high_level_design/) · [LLD](../03_low_level_design/)
 
